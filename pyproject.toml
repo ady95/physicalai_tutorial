@@ -3,7 +3,7 @@ name = "physicalai-tutorial"
 version = "0.1.0"
 description = "《로봇 없이 시작하는 Physical AI 따라하기》 예제 코드"
 readme = "README.md"
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.12,<3.13"
 dependencies = [
     "mujoco>=3.3",
     "numpy>=1.26",
@@ -13,6 +13,9 @@ dependencies = [
     "torch>=2.4",
     "torchvision>=0.19",
     "ultralytics>=8.3",
+    "gymnasium>=1.0",
+    "stable-baselines3>=2.4",
+    "lerobot[dataset,training,smolvla]>=0.6",
 ]
 
 [tool.uv]

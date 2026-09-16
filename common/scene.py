@@ -6,7 +6,9 @@ Menagerie의 so101.xml 을 include 해야 하는데, MuJoCo는 include 경로와
 so101.xml 과 같은 폴더에 파일로 써 놓고 그 경로를 돌려줍니다.
 """
 
+import hashlib
 import os
+import tempfile
 
 from common.menagerie import so101_xml
 
@@ -62,12 +64,21 @@ SCENE_TEMPLATE = """
 """
 
 
-def build_scene(cube_pos=(0.25, 0.0), box_pos=(0.0, 0.25), filename="physicalai_scene.xml") -> str:
-    """장면 XML 파일을 so101.xml 옆에 쓰고 경로를 돌려줍니다."""
+def build_scene(cube_pos=(0.25, 0.0), box_pos=(0.0, 0.25)) -> str:
+    """장면 XML 파일을 so101.xml 옆에 쓰고 경로를 돌려줍니다.
+
+    파일 이름에 내용의 해시를 붙여, 같은 장면은 같은 파일을 재사용하고
+    여러 프로세스가 동시에 써도(5부의 병렬 환경) 서로 덮어쓰지 않게 합니다.
+    쓰기는 임시 파일에 한 뒤 os.replace 로 바꿔치기(원자적)합니다.
+    """
     robot_dir = os.path.dirname(so101_xml("so101.xml"))
     xml = SCENE_TEMPLATE.format(cube_x=cube_pos[0], cube_y=cube_pos[1],
                                 box_x=box_pos[0], box_y=box_pos[1])
-    path = os.path.join(robot_dir, filename)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(xml)
+    tag = hashlib.md5(xml.encode("utf-8")).hexdigest()[:8]
+    path = os.path.join(robot_dir, f"physicalai_scene_{tag}.xml")
+    if not os.path.exists(path):
+        fd, tmp = tempfile.mkstemp(prefix="scene_", suffix=".xml", dir=robot_dir)
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(xml)
+        os.replace(tmp, path)
     return path

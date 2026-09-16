@@ -7,7 +7,7 @@ Physical AI의 전체 파이프라인을 완주합니다.
 ## 준비
 
 - Ubuntu 22.04 LTS 이상 (Windows는 WSL2, macOS는 CPU 경로)
-- Python 3.10 ~ 3.12
+- Python 3.12 (LeRobot 0.6 이상이 3.12를 요구합니다. uv sync 가 자동으로 내려받습니다)
 - [uv](https://docs.astral.sh/uv/) (Python 패키지·가상환경 관리자)
 - NVIDIA GPU는 6부(ACT)·7부(SmolVLA) 학습 실습에 필요합니다. 없으면 Google Colab 경로를 사용합니다.
 
