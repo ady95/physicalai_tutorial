@@ -49,6 +49,17 @@ def main():
               f"min {depth.min():.3f} m  max {depth.max():.3f} m")
         cam.close()
 
+    # 손목 카메라는 대기 자세에서는 하늘을 본다. 블록 위로 손을 보낸 뒤 다시 찍는다
+    robot.open_gripper(0.5)
+    robot.move_to([0.24, 0.0, 0.08], seconds=1.2)
+    cam = SimCamera(model, camera="wrist_cam", width=640, height=480)
+    rgb, depth = cam.capture(data)
+    cv2.imwrite(f"{OUT}/cam_wrist_cam_above_rgb.png", cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR))
+    save_depth_png(depth, f"{OUT}/cam_wrist_cam_above_depth.png", max_m=0.3)
+    print(f"  {'wrist_cam':<10s} (블록 위 8 cm 로 이동 후)  depth min {depth.min():.3f} m  max {depth.max():.3f} m")
+    cam.close()
+    robot.reset()
+
     print("\n=== top 카메라: 픽셀 → 월드 좌표 되찾기 ===")
     cam = SimCamera(model, camera="top", width=640, height=480)
     rgb, depth = cam.capture(data)
