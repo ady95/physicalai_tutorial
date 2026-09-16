@@ -44,6 +44,11 @@ MUJOCO_GL=egl python ch03/pick_and_place.py
 
 학습 명령(ACT, SmolVLA)은 `scripts_train_all.sh` 와 `scripts_ch08.sh` 안에 있습니다. 6부·7부 학습에는 NVIDIA GPU(VRAM 8 GB 이상)가 필요하며, 책의 부록 D에 GPU가 없을 때의 경로가 있습니다.
 
+## 학습 체크포인트
+
+6~8부에서 필자가 학습한 ACT·SmolVLA 체크포인트는 [릴리스 페이지](https://github.com/ady95/physicalai_tutorial/releases/tag/v0.1-checkpoints)에 있습니다.
+GPU가 없거나 학습을 건너뛰고 싶을 때 내려받아 평가 스크립트(`ch06/eval_act.py`, `ch07/eval_smolvla.py`)에 바로 넣을 수 있습니다.
+
 ## 라이선스
 
 MIT

@@ -36,7 +36,9 @@ run ch08_gen_rand_C    python ch06/eval_act.py --checkpoint $ACT --episodes 10 -
 
 # 8-1
 DSM=outputs/datasets/so101_multicolor_sim
-run ch08_record_multi  python ch08/record_multicolor.py --episodes 60 --root $DSM --top-camera $TOPCAM
+if [ ! -f $DSM/meta/info.json ]; then
+  run ch08_record_multi  python ch08/record_multicolor.py --episodes 120 --root $DSM --top-camera $TOPCAM
+fi
 run ch08_train_multi   lerobot-train --policy.path=lerobot/smolvla_base --dataset.repo_id=physicalai/so101_multicolor_sim --dataset.root=$DSM \
     --rename_map="$RENAME" --policy.device=cuda --policy.push_to_hub=false \
     --output_dir=outputs/train/smolvla_multicolor --job_name=smolvla_multicolor --steps=$VLA_STEPS --batch_size=8 \
