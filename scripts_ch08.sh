@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 source .venv/bin/activate
 export MUJOCO_GL=egl SVT_LOG=0
 mkdir -p outputs/logs
-F='Warning|warn|torchcodec|libtorchcodec|libav|it/s\]|B/s\]|Exception ignored|Traceback|File "|EGLError|glCheckError|^\s*$'
+F='Warning|warn|torchcodec|libtorchcodec|libav|it/s\]|B/s\]|Map:|mp4 @|Exception ignored|Traceback|File "|EGLError|glCheckError|^\s*$'
 run() { name=$1; shift; echo "=== $name  $(date +%H:%M:%S) ==="; "$@" 2>&1 | grep -vE "$F" | tee "outputs/logs/$name.txt" | tail -${TAIL:-8}; }
 RENAME='{"observation.images.top": "observation.images.camera1", "observation.images.wrist": "observation.images.camera2"}'
 ACT=outputs/train/act_so101/checkpoints/last/pretrained_model
