@@ -30,9 +30,9 @@ WORLD_XML = """
     <light pos="0 0 3" dir="0 0 -1"/>
     <geom name="floor" type="plane" size="2 2 0.1" rgba="0.9 0.9 0.9 1"/>
 
-    <!-- 책상: 바닥에 고정된 상자 -->
-    <body name="table" pos="0 0 0.4">
-      <geom type="box" size="0.4 0.3 0.02" rgba="0.6 0.4 0.2 1" friction="{friction} 0.005 0.0001"/>
+    <!-- 책상: joint가 없으므로 세계에 고정. 바닥에서 윗면까지 높이 0.4m -->
+    <body name="table" pos="0 0 0.2">
+      <geom type="box" size="0.4 0.3 0.2" rgba="0.6 0.4 0.2 1" friction="{friction} 0.005 0.0001"/>
     </body>
 
     <!-- 빨간 블록: 책상 위 0.5m 공중에서 시작, freejoint 로 자유롭게 움직임 -->
@@ -48,7 +48,7 @@ WORLD_XML = """
       <geom type="sphere" size="0.03" mass="0.1" rgba="0.1 0.3 1 1"/>
     </body>
 
-    <camera name="side" pos="1.2 -1.2 0.9" xyaxes="0.7 0.7 0 -0.3 0.3 0.9"/>
+    <camera name="side" mode="targetbody" target="table" pos="0.9 -0.9 0.9"/>
   </worldbody>
 </mujoco>
 """
