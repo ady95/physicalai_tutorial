@@ -34,6 +34,7 @@ source .venv/bin/activate
 | `scripts_run_all.sh` | 검증 | 1~5부 예제를 순서대로 실행해 로그 저장 |
 | `scripts_train_all.sh` | 6~7부 | 데이터셋 기록 → ACT 학습·평가 → SmolVLA 평가·파인튜닝·평가 |
 | `scripts_ch08.sh` | 8부 | 환경 변형, 일반화, 3색 블록 실험 |
+| `notebooks/` | 공통 | GPU 없는 독자를 위한 Colab 노트북 |
 
 각 폴더의 스크립트는 저장소 루트에서 실행합니다. MuJoCo 렌더링이 필요한 스크립트는 Linux + NVIDIA에서 환경변수 MUJOCO_GL=egl 이 필요합니다.
 
@@ -43,6 +44,12 @@ MUJOCO_GL=egl python ch03/pick_and_place.py
 ```
 
 학습 명령(ACT, SmolVLA)은 `scripts_train_all.sh` 와 `scripts_ch08.sh` 안에 있습니다. 6부·7부 학습에는 NVIDIA GPU(VRAM 8 GB 이상)가 필요하며, 책의 부록 D에 GPU가 없을 때의 경로가 있습니다.
+
+## GPU가 없다면 (Colab)
+
+`notebooks/colab_act_train.ipynb` 가 데이터셋 만들기 → ACT 학습 → 평가 → SmolVLA 파인튜닝을 Colab에서 한 번에 진행합니다.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ady95/physicalai_tutorial/blob/main/notebooks/colab_act_train.ipynb)
 
 ## 학습 체크포인트
 
