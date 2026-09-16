@@ -96,7 +96,7 @@ def main():
 
     if args.trials == 1:
         robot = SO101Sim(cube_pos=tuple(args.cube), box_pos=tuple(args.box),
-                         render=not args.no_video, camera="side")
+                         render=not args.no_video, camera="fixed")
         ok = pick_and_place(robot)
         print("\n결과:", "성공" if ok else "실패")
         robot.save_video(args.out)

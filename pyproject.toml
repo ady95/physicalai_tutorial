@@ -12,6 +12,7 @@ dependencies = [
     "matplotlib>=3.8",
     "torch>=2.4",
     "torchvision>=0.19",
+    "ultralytics>=8.3",
 ]
 
 [tool.uv]

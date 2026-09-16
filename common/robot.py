@@ -25,7 +25,7 @@ GRIPPER_CLOSED = -0.1           # rad, 집게 오므림 (약간 더 조이도록
 
 class SO101Sim:
     def __init__(self, cube_pos=(0.25, 0.0), box_pos=(0.0, 0.25), render=True,
-                 camera="side", fps=30, width=640, height=480):
+                 camera="fixed", fps=30, width=640, height=480):
         self.model = mujoco.MjModel.from_xml_path(build_scene(cube_pos, box_pos))
         self.data = mujoco.MjData(self.model)
         m = self.model

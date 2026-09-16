@@ -46,15 +46,17 @@ SCENE_TEMPLATE = """
       <geom type="box" size="0.003 0.05 0.015" pos="-0.05 0 0.015" rgba="0.2 0.4 0.9 1"/>
     </body>
 
-    <!-- 카메라 3대: 위에서, 옆에서, 정면에서 -->
+    <!-- 카메라 4대: 위에서(top), 고정 관찰용(fixed), 블록을 따라가는 옆·정면 카메라 -->
     <camera name="top" pos="0.2 0 0.8" quat="1 0 0 0"/>
+    <body name="cam_target" pos="0.15 0.05 0.03"/>
+    <camera name="fixed" mode="targetbody" target="cam_target" pos="0.65 -0.5 0.4"/>
     <camera name="side" mode="targetbody" target="cube" pos="0.55 -0.55 0.35"/>
     <camera name="front" mode="targetbody" target="cube" pos="0.75 0 0.3"/>
   </worldbody>
 
   <keyframe>
-    <!-- 대기 자세: 팔을 접어 손을 16 cm 높이에 두어 바닥의 물체를 건드리지 않게 -->
-    <key name="home" qpos="0 -1.57 1.57 0 0 0 {cube_x} {cube_y} 0.015 1 0 0 0" ctrl="0 -1.57 1.57 0 0 0"/>
+    <!-- 대기 자세: 팔을 위로 세워 손을 41 cm 높이에. 바닥의 물체를 건드리지 않고 위쪽 카메라 시야도 가리지 않는다 -->
+    <key name="home" qpos="0 -1.5 0.5 0 0 0 {cube_x} {cube_y} 0.015 1 0 0 0" ctrl="0 -1.5 0.5 0 0 0"/>
   </keyframe>
 </mujoco>
 """

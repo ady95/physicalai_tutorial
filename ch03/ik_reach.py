@@ -27,7 +27,7 @@ def main():
     ap.add_argument("--out", default="outputs/ch03_ik_reach.mp4")
     args = ap.parse_args()
 
-    robot = SO101Sim(cube_pos=tuple(args.cube), render=not args.no_video, camera="side")
+    robot = SO101Sim(cube_pos=tuple(args.cube), render=not args.no_video, camera="fixed")
     cube = robot.cube_pos()
     print(f"블록 위치      : {cube}")
     print(f"손끝 시작 위치 : {robot.site_pose()[0]}   손가락 방향 {robot.finger_dir()}")

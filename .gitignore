@@ -4,7 +4,8 @@ __pycache__/
 outputs/
 *.mp4
 *.png
-!assets/**/*.png
+*.jpg
+!assets/**
 .ipynb_checkpoints/
 wandb/
 .DS_Store
