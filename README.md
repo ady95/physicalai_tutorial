@@ -28,10 +28,10 @@ source .venv/bin/activate
 | `ch04/` | 4부 | OpenCV, YOLO, 가상 카메라, Vision + Robot 연결 |
 | `ch05/` | 5부 | 강화학습: 점 환경 PPO, 로봇팔 도달 환경과 Reward 비교 |
 | `ch06/` | 6부 | LeRobot 데이터셋 조회, 시연 데이터셋 기록, ACT 평가 |
-| `ch07/` | 7부 | SmolVLA 추론(사전학습 / 파인튜닝) 평가 |
-| `ch08/` | 8부 | 3색 블록 데이터셋·색 지정 평가, 환경 변형 실험 |
+| `ch07/` | 7부 | SmolVLA 평가(사전학습 / 파인튜닝), 명령 문장 변화 실험 |
+| `ch08/` | 8부 | 3색 블록 데이터셋·색 지정 평가, 언어 조건 진단, 환경 변형 실험 |
 | `common/` | 공통 | 장면(scene), 로봇 래퍼, IK, 가상 카메라, Menagerie 다운로드 |
-| `scripts_run_all.sh` | 검증 | 1~5부 예제를 순서대로 실행해 로그 저장 |
+| `scripts_run_all.sh` | 검증 | 1~4부(WITH_RL=1 이면 5부까지) 예제를 순서대로 실행해 로그 저장 |
 | `scripts_train_all.sh` | 6~7부 | 데이터셋 기록 → ACT 학습·평가 → SmolVLA 평가·파인튜닝·평가 |
 | `scripts_ch08.sh` | 8부 | 환경 변형, 일반화, 3색 블록 실험 |
 | `notebooks/` | 공통 | GPU 없는 독자를 위한 Colab 노트북 |
