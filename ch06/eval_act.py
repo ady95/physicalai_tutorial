@@ -74,7 +74,11 @@ def main():
     ap.add_argument("--seed", type=int, default=1000)
     ap.add_argument("--video", action="store_true")
     ap.add_argument("--out", default="outputs/ch06_act_eval.mp4")
+    ap.add_argument("--cube", type=float, nargs=2, default=None, help="블록 위치 고정 (8-2)")
+    ap.add_argument("--scene-kw", default=None, help='장면 변화 JSON, 예: {"light_pos": [0.5, 0.5, 1.0]} (8-3)')
     args = ap.parse_args()
+    import json
+    scene_kw = json.loads(args.scene_kw) if args.scene_kw else None
 
     from lerobot.datasets import LeRobotDatasetMetadata
     from lerobot.policies import make_pre_post_processors
@@ -92,9 +96,9 @@ def main():
     rng = np.random.default_rng(args.seed)
     results, t0 = [], time.time()
     for i in range(args.episodes):
-        cube = random_cube(rng)
+        cube = tuple(args.cube) if args.cube else random_cube(rng)
         ok, ts = run_episode(policy, preprocess, postprocess, device, cube,
-                             video=(args.video and i == 0), out=args.out)
+                             video=(args.video and i == 0), out=args.out, scene_kw=scene_kw)
         results.append(ok)
         print(f"episode {i + 1:2d}  블록 ({cube[0]:+.3f}, {cube[1]:+.3f})  → "
               f"{'성공 (%.1f s)' % ts if ok else '실패'}   ({time.time() - t0:4.0f} s)")
