@@ -51,6 +51,7 @@ SCENE_TEMPLATE = """
 
     <!-- 카메라 4대: 위에서(top), 고정 관찰용(fixed), 블록을 따라가는 옆·정면 카메라 -->
     <camera name="top" pos="{top_cam_pos}" quat="1 0 0 0"/>
+    <camera name="top_zoom" pos="0.15 0.05 0.8" quat="1 0 0 0" fovy="34"/>
     <body name="cam_target" pos="0.15 0.05 0.03"/>
     <camera name="fixed" mode="targetbody" target="cam_target" pos="0.65 -0.5 0.4"/>
     <camera name="side" mode="targetbody" target="cube" pos="0.55 -0.55 0.35"/>

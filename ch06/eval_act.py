@@ -31,10 +31,10 @@ DEFAULT_KEYS = {"top": "observation.images.top", "wrist": "observation.images.wr
 
 
 def run_episode(policy, preprocess, postprocess, device, cube, max_seconds=12.0, video=False, out=None,
-                image_keys=DEFAULT_KEYS, task=TASK, box=(0.05, 0.22), scene_kw=None):
+                image_keys=DEFAULT_KEYS, task=TASK, box=(0.05, 0.22), scene_kw=None, top_camera="top"):
     """Policy 로 episode 하나를 실행. image_keys 는 카메라 이름 → 관측 키 (SmolVLA 는 camera1/2 를 쓴다)."""
     robot = SO101Sim(cube_pos=cube, box_pos=box, render=video, camera="fixed", **(scene_kw or {}))
-    cams = {"top": SimCamera(robot.model, "top", IMG_W, IMG_H),
+    cams = {"top": SimCamera(robot.model, top_camera, IMG_W, IMG_H),
             "wrist": SimCamera(robot.model, "wrist_cam", IMG_W, IMG_H)}
     steps_per_frame = int(round(1 / (FPS * robot.model.opt.timestep)))
     policy.reset()
@@ -68,7 +68,7 @@ def run_episode(policy, preprocess, postprocess, device, cube, max_seconds=12.0,
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", required=True)
-    ap.add_argument("--dataset-root", default="outputs/datasets/so101_pickplace_sim")
+    ap.add_argument("--dataset-root", default=None, help="정규화 통계를 데이터셋에서 다시 읽고 싶을 때만 지정 (기본: 체크포인트에 저장된 통계 사용)")
     ap.add_argument("--repo-id", default="physicalai/so101_pickplace_sim")
     ap.add_argument("--episodes", type=int, default=20)
     ap.add_argument("--seed", type=int, default=1000)
@@ -76,6 +76,9 @@ def main():
     ap.add_argument("--out", default="outputs/ch06_act_eval.mp4")
     ap.add_argument("--cube", type=float, nargs=2, default=None, help="블록 위치 고정 (8-2)")
     ap.add_argument("--scene-kw", default=None, help='장면 변화 JSON, 예: {"light_pos": [0.5, 0.5, 1.0]} (8-3)')
+    ap.add_argument("--n-action-steps", type=int, default=None, help="chunk 중 실제 실행할 스텝 수 (기본: 학습 설정값 50)")
+    ap.add_argument("--ensemble", type=float, default=None, help="Temporal Ensembling 계수 (예: 0.01). 매 스텝 재추론 + 가중 평균")
+    ap.add_argument("--top-camera", default="top", help="데이터셋을 기록할 때 쓴 위 카메라 이름")
     args = ap.parse_args()
     import json
     scene_kw = json.loads(args.scene_kw) if args.scene_kw else None
@@ -86,19 +89,28 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     policy = ACTPolicy.from_pretrained(args.checkpoint).to(device).eval()
-    meta = LeRobotDatasetMetadata(args.repo_id, root=args.dataset_root)
+    # 체크포인트 폴더에 정규화 통계(전처리기·후처리기)가 함께 저장되어 있으므로 보통은 그대로 쓴다
+    stats = LeRobotDatasetMetadata(args.repo_id, root=args.dataset_root).stats if args.dataset_root else None
     preprocess, postprocess = make_pre_post_processors(
-        policy.config, args.checkpoint, dataset_stats=meta.stats,
+        policy.config, args.checkpoint, dataset_stats=stats,
         preprocessor_overrides={"device_processor": {"device": str(device)}})
+    if args.ensemble is not None:                       # 6-6 의 Temporal Ensembling 을 실행 시점에 켠다
+        from lerobot.policies.act.modeling_act import ACTTemporalEnsembler
+        policy.config.temporal_ensemble_coeff = args.ensemble
+        policy.config.n_action_steps = 1
+        policy.temporal_ensembler = ACTTemporalEnsembler(args.ensemble, policy.config.chunk_size)
+    elif args.n_action_steps is not None:
+        policy.config.n_action_steps = args.n_action_steps
     print(f"policy: ACT ({sum(p.numel() for p in policy.parameters()) / 1e6:.1f}M params), device {device}")
-    print(f"chunk_size {policy.config.chunk_size}, n_action_steps {policy.config.n_action_steps}")
+    print(f"chunk_size {policy.config.chunk_size}, n_action_steps {policy.config.n_action_steps}, "
+          f"temporal_ensemble_coeff {policy.config.temporal_ensemble_coeff}")
 
     rng = np.random.default_rng(args.seed)
     results, t0 = [], time.time()
     for i in range(args.episodes):
         cube = tuple(args.cube) if args.cube else random_cube(rng)
         ok, ts = run_episode(policy, preprocess, postprocess, device, cube,
-                             video=(args.video and i == 0), out=args.out, scene_kw=scene_kw)
+                             video=(args.video and i == 0), out=args.out, scene_kw=scene_kw, top_camera=args.top_camera)
         results.append(ok)
         print(f"episode {i + 1:2d}  블록 ({cube[0]:+.3f}, {cube[1]:+.3f})  → "
               f"{'성공 (%.1f s)' % ts if ok else '실패'}   ({time.time() - t0:4.0f} s)")

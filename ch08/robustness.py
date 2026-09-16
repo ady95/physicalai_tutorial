@@ -53,7 +53,7 @@ def save_examples(out_dir):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", required=True)
-    ap.add_argument("--dataset-root", default="outputs/datasets/so101_pickplace_sim")
+    ap.add_argument("--dataset-root", default=None)
     ap.add_argument("--repo-id", default="physicalai/so101_pickplace_sim")
     ap.add_argument("--episodes", type=int, default=10)
     ap.add_argument("--seed", type=int, default=3000)
@@ -66,9 +66,9 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     policy = ACTPolicy.from_pretrained(args.checkpoint).to(device).eval()
-    meta = LeRobotDatasetMetadata(args.repo_id, root=args.dataset_root)
+    stats = LeRobotDatasetMetadata(args.repo_id, root=args.dataset_root).stats if args.dataset_root else None
     preprocess, postprocess = make_pre_post_processors(
-        policy.config, args.checkpoint, dataset_stats=meta.stats,
+        policy.config, args.checkpoint, dataset_stats=stats,
         preprocessor_overrides={"device_processor": {"device": str(device)}})
 
     save_examples("outputs/ch08")

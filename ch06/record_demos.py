@@ -38,11 +38,11 @@ JOINT_NAMES = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wri
 class RecordingRobot(SO101Sim):
     """SO101Sim 과 같지만, 1/FPS 초마다 (관측, 행동) 프레임을 기록한다."""
 
-    def __init__(self, dataset=None, task=TASK, **kw):
+    def __init__(self, dataset=None, task=TASK, top_camera="top", **kw):
         super().__init__(render=False, **kw)
         self.dataset = dataset
         self.task = task
-        self.cams = {"top": SimCamera(self.model, "top", IMG_W, IMG_H),
+        self.cams = {"top": SimCamera(self.model, top_camera, IMG_W, IMG_H),
                      "wrist": SimCamera(self.model, "wrist_cam", IMG_W, IMG_H)}
         self.record_every = int(round(1 / (FPS * self.model.opt.timestep)))
         self.n_recorded = 0
@@ -107,6 +107,7 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--keep-failed", action="store_true", help="실패한 시연도 저장")
     ap.add_argument("--cube", type=float, nargs=2, default=None, help="블록 위치를 고정 (8-2 의 일반화 실험용)")
+    ap.add_argument("--top-camera", default="top", help="위 카메라 이름 (top 또는 top_zoom)")
     args = ap.parse_args()
 
     from lerobot.datasets import LeRobotDataset
@@ -128,7 +129,7 @@ def main():
     saved, failed = 0, 0
     for ep in range(args.episodes):
         cube = tuple(args.cube) if args.cube else random_cube(rng)
-        robot = RecordingRobot(dataset=dataset, cube_pos=cube, box_pos=(0.05, 0.22))
+        robot = RecordingRobot(dataset=dataset, cube_pos=cube, box_pos=(0.05, 0.22), top_camera=args.top_camera)
         ok = scripted_pick_and_place(robot)
         n = robot.n_recorded
         robot.close()

@@ -11,7 +11,7 @@ mkdir -p outputs/logs
 F='Warning|warn|torchcodec|libtorchcodec|libav|it/s\]|B/s\]|Map:|mp4 @|Exception ignored|Traceback|File "|EGLError|glCheckError|^\s*$'
 run() { name=$1; shift; echo "=== $name  $(date +%H:%M:%S) ==="; "$@" 2>&1 | grep -vE "$F" | tee "outputs/logs/$name.txt" | tail -${TAIL:-8}; }
 RENAME='{"observation.images.top": "observation.images.camera1", "observation.images.wrist": "observation.images.camera2"}'
-ACT=outputs/train/act_so101/checkpoints/last/pretrained_model
+ACT=${ACT:-outputs/train/act_so101_v2/checkpoints/last/pretrained_model}
 VLA_STEPS=${VLA_STEPS:-10000}
 
 # 8-3 (빠름, 6부 ACT 만 필요)
@@ -24,10 +24,10 @@ run ch08_train_fixed   lerobot-train --dataset.repo_id=physicalai/so101_fixed_si
     --policy.type=act --policy.chunk_size=50 --policy.n_action_steps=50 --policy.device=cuda --policy.push_to_hub=false \
     --output_dir=outputs/train/act_fixed --job_name=act_fixed --steps=8000 --batch_size=16 --save_freq=4000 --log_freq=500 --wandb.enable=false
 ACTF=outputs/train/act_fixed/checkpoints/last/pretrained_model
-run ch08_gen_fixed_A   python ch06/eval_act.py --checkpoint $ACTF --dataset-root $DSF --repo-id physicalai/so101_fixed_sim --episodes 10 --cube 0.24 0.0
-run ch08_gen_fixed_B   python ch06/eval_act.py --checkpoint $ACTF --dataset-root $DSF --repo-id physicalai/so101_fixed_sim --episodes 10 --cube 0.22 0.08
-run ch08_gen_fixed_C   python ch06/eval_act.py --checkpoint $ACTF --dataset-root $DSF --repo-id physicalai/so101_fixed_sim --episodes 10 --cube 0.20 -0.10
-run ch08_gen_fixed_R   python ch06/eval_act.py --checkpoint $ACTF --dataset-root $DSF --repo-id physicalai/so101_fixed_sim --episodes 20
+run ch08_gen_fixed_A   python ch06/eval_act.py --checkpoint $ACTF --episodes 10 --cube 0.24 0.0
+run ch08_gen_fixed_B   python ch06/eval_act.py --checkpoint $ACTF --episodes 10 --cube 0.22 0.08
+run ch08_gen_fixed_C   python ch06/eval_act.py --checkpoint $ACTF --episodes 10 --cube 0.20 -0.10
+run ch08_gen_fixed_R   python ch06/eval_act.py --checkpoint $ACTF --episodes 20
 run ch08_gen_rand_A    python ch06/eval_act.py --checkpoint $ACT --episodes 10 --cube 0.24 0.0
 run ch08_gen_rand_B    python ch06/eval_act.py --checkpoint $ACT --episodes 10 --cube 0.22 0.08
 run ch08_gen_rand_C    python ch06/eval_act.py --checkpoint $ACT --episodes 10 --cube 0.20 -0.10
