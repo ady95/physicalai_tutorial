@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+outputs/
+*.mp4
+*.png
+!assets/**/*.png
+.ipynb_checkpoints/
+wandb/
+.DS_Store
+Thumbs.db
