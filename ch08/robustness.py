@@ -43,7 +43,7 @@ def save_examples(out_dir):
     os.makedirs(out_dir, exist_ok=True)
     for name, (_, kw) in VARIANTS.items():
         robot = SO101Sim(cube_pos=(0.24, 0.0), box_pos=(0.05, 0.22), render=False, **kw)
-        cam = SimCamera(robot.model, "top", IMG_W, IMG_H)
+        cam = SimCamera(robot.model, "top", IMG_W, IMG_H)          # 그림은 항상 top 카메라로
         rgb, _ = cam.capture(robot.data)
         cv2.imwrite(f"{out_dir}/variant_{name}.png", cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR))
         cam.close()
@@ -58,6 +58,7 @@ def main():
     ap.add_argument("--episodes", type=int, default=10)
     ap.add_argument("--seed", type=int, default=3000)
     ap.add_argument("--only", default=None, help="쉼표로 변형 이름 지정")
+    ap.add_argument("--top-camera", default="top")
     args = ap.parse_args()
 
     from lerobot.datasets import LeRobotDatasetMetadata
@@ -82,7 +83,7 @@ def main():
         ok = 0
         for i in range(args.episodes):
             cube = random_cube(rng)
-            s, _ = run_episode(policy, preprocess, postprocess, device, cube, scene_kw=kw)
+            s, _ = run_episode(policy, preprocess, postprocess, device, cube, scene_kw=kw, top_camera=args.top_camera)
             ok += int(s)
         results[name] = ok / args.episodes
         print(f"{name:<14s} {desc:<34s} {ok:3d}/{args.episodes:<3d} = {100 * ok / args.episodes:4.0f}%   ({time.time() - t0:4.0f} s)")

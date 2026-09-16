@@ -38,10 +38,10 @@ def random_layout(rng, n=3, min_gap=0.07):
     return [tuple(map(float, p)) for p in pts]
 
 
-def make_robot(layout, dataset=None, task=None, **kw):
+def make_robot(layout, dataset=None, task=None, top_camera="top", **kw):
     """빨간 블록은 기본 cube, 초록·노랑은 extra_cubes 로."""
     red, green, yellow = layout
-    return RecordingRobot(dataset=dataset, task=task, cube_pos=red, box_pos=(0.05, 0.22),
+    return RecordingRobot(dataset=dataset, task=task, top_camera=top_camera, cube_pos=red, box_pos=(0.05, 0.22),
                           extra_cubes=[("green", green), ("yellow", yellow)], **kw)
 
 
@@ -71,6 +71,7 @@ def main():
     ap.add_argument("--root", default="outputs/datasets/so101_multicolor_sim")
     ap.add_argument("--repo-id", default="physicalai/so101_multicolor_sim")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--top-camera", default="top", help="위 카메라 이름 (top 또는 top_zoom)")
     args = ap.parse_args()
 
     from lerobot.datasets import LeRobotDataset
@@ -90,7 +91,7 @@ def main():
     for ep in range(args.episodes):
         color = COLORS[ep % 3]
         layout = random_layout(rng)
-        robot = make_robot(layout, dataset=dataset, task=TASK_FMT.format(color=color))
+        robot = make_robot(layout, dataset=dataset, task=TASK_FMT.format(color=color), top_camera=args.top_camera)
         ok = scripted_pick_color(robot, color)
         n = robot.n_recorded
         robot.close()

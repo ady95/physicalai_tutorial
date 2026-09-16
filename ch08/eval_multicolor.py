@@ -27,11 +27,12 @@ from common.robot import SO101Sim  # noqa: E402
 from common.vision import SimCamera  # noqa: E402
 
 
-def run_episode(policy, preprocess, postprocess, device, layout, color, max_seconds=12.0, video=False, out=None):
+def run_episode(policy, preprocess, postprocess, device, layout, color, max_seconds=12.0, video=False, out=None,
+                top_camera="top"):
     red, green, yellow = layout
     robot = SO101Sim(cube_pos=red, box_pos=(0.05, 0.22), render=video, camera="fixed",
                      extra_cubes=[("green", green), ("yellow", yellow)])
-    cams = {"top": SimCamera(robot.model, "top", IMG_W, IMG_H),
+    cams = {"top": SimCamera(robot.model, top_camera, IMG_W, IMG_H),
             "wrist": SimCamera(robot.model, "wrist_cam", IMG_W, IMG_H)}
     steps_per_frame = int(round(1 / (FPS * robot.model.opt.timestep)))
     task = TASK_FMT.format(color=color)
@@ -70,6 +71,7 @@ def main():
     ap.add_argument("--seed", type=int, default=2000)
     ap.add_argument("--video", action="store_true")
     ap.add_argument("--out", default="outputs/ch08_multicolor.mp4")
+    ap.add_argument("--top-camera", default="top")
     args = ap.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -81,7 +83,7 @@ def main():
         layout = random_layout(rng)                       # 같은 배치에서 세 가지 색을 차례로 시킨다
         for color in COLORS:
             res = run_episode(policy, preprocess, postprocess, device, layout, color,
-                              video=(args.video and i == 0 and color == "green"), out=args.out)
+                              video=(args.video and i == 0 and color == "green"), out=args.out, top_camera=args.top_camera)
             stats[color][res.split("(")[0]] += 1
             print(f"layout {i + 1:2d}  \"{TASK_FMT.format(color=color)}\"  → {res}   ({time.time() - t0:4.0f} s)")
     print()
