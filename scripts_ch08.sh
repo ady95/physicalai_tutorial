@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 8부 실측 파이프라인 (scripts_train_all.sh 가 끝난 뒤 실행)
-#   8-1: 세 가지 색 블록 데이터셋 60 episode → SmolVLA 파인튜닝 → 색별 평가
+#   8-1: 세 가지 색 블록 데이터셋 120 episode → SmolVLA 파인튜닝 → 색별 평가 → 언어 진단
 #   8-2: 고정 위치 20 episode → ACT 학습 → 고정/무작위 위치 평가, 6부 ACT 와 비교
 #   8-3: 조명·바닥·카메라 변형에서 ACT 평가
 set -u
@@ -44,4 +44,11 @@ run ch08_train_multi   lerobot-train --policy.path=lerobot/smolvla_base --datase
     --output_dir=outputs/train/smolvla_multicolor --job_name=smolvla_multicolor --steps=$VLA_STEPS --batch_size=8 \
     --save_freq=2500 --log_freq=250 --wandb.enable=false
 run ch08_eval_multi    python ch08/eval_multicolor.py --checkpoint outputs/train/smolvla_multicolor/checkpoints/last/pretrained_model --episodes-per-color 10 --video --top-camera $TOPCAM
+run ch08_diag_multi    python ch08/diagnose_language.py --checkpoint outputs/train/smolvla_multicolor/checkpoints/last/pretrained_model
+
+# 8-1의 6단계(데이터·학습량 두 배) 재현 — 기록 약 27분 + 학습 약 2시간 15분 (RTX 3060 기준)
+#   DS=outputs/datasets/so101_multicolor_sim_240
+#   MUJOCO_GL=egl python ch08/record_multicolor.py --episodes 240 --root $DS --repo-id physicalai/so101_multicolor_sim_240
+#   lerobot-train --policy.path=lerobot/smolvla_base --dataset.repo_id=physicalai/so101_multicolor_sim_240 --dataset.root=$DS \n#     --rename_map="$RENAME" --policy.device=cuda --policy.push_to_hub=false \n#     --output_dir=outputs/train/smolvla_multicolor_v2 --job_name=smolvla_multicolor_v2 --steps=20000 --batch_size=8 \n#     --save_freq=5000 --log_freq=250 --wandb.enable=false
+# 학습을 건너뛰려면 릴리스의 smolvla_multicolor_v2_20k.tar.gz 를 쓴다.
 echo "done $(date +%H:%M:%S)"
