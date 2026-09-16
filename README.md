@@ -26,16 +26,23 @@ source .venv/bin/activate
 | `ch02/` | 2부 | 개발환경 확인, MuJoCo 첫 실행, 블록 떨어뜨리기, 로봇팔 관절 움직이기 |
 | `ch03/` | 3부 | 좌표계·Pose, FK/IK, Rule 기반 Pick and Place |
 | `ch04/` | 4부 | OpenCV, YOLO, 가상 카메라, Vision + Robot 연결 |
-| `ch05/` | 5부 | 강화학습 첫 실습, 로봇팔 RL |
-| `ch06/` | 6부 | LeRobot 데이터셋, Demonstration 생성, ACT 학습·평가 |
-| `ch07/` | 7부 | SmolVLA 추론·파인튜닝 |
-| `ch08/` | 8부 | 최종 프로젝트 |
+| `ch05/` | 5부 | 강화학습: 점 환경 PPO, 로봇팔 도달 환경과 Reward 비교 |
+| `ch06/` | 6부 | LeRobot 데이터셋 조회, 시연 데이터셋 기록, ACT 평가 |
+| `ch07/` | 7부 | SmolVLA 추론(사전학습 / 파인튜닝) 평가 |
+| `ch08/` | 8부 | 3색 블록 데이터셋·색 지정 평가, 환경 변형 실험 |
+| `common/` | 공통 | 장면(scene), 로봇 래퍼, IK, 가상 카메라, Menagerie 다운로드 |
+| `scripts_run_all.sh` | 검증 | 1~5부 예제를 순서대로 실행해 로그 저장 |
+| `scripts_train_all.sh` | 6~7부 | 데이터셋 기록 → ACT 학습·평가 → SmolVLA 평가·파인튜닝·평가 |
+| `scripts_ch08.sh` | 8부 | 환경 변형, 일반화, 3색 블록 실험 |
 
-각 폴더의 스크립트는 저장소 루트에서 실행합니다.
+각 폴더의 스크립트는 저장소 루트에서 실행합니다. MuJoCo 렌더링이 필요한 스크립트는 Linux + NVIDIA에서 환경변수 MUJOCO_GL=egl 이 필요합니다.
 
 ```bash
 python ch01/agent_3lines.py
+MUJOCO_GL=egl python ch03/pick_and_place.py
 ```
+
+학습 명령(ACT, SmolVLA)은 `scripts_train_all.sh` 와 `scripts_ch08.sh` 안에 있습니다. 6부·7부 학습에는 NVIDIA GPU(VRAM 8 GB 이상)가 필요하며, 책의 부록 D에 GPU가 없을 때의 경로가 있습니다.
 
 ## 라이선스
 
