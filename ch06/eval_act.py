@@ -27,8 +27,13 @@ from common.robot import SO101Sim  # noqa: E402
 from common.vision import SimCamera  # noqa: E402
 
 
-def run_episode(policy, preprocess, postprocess, device, cube, max_seconds=12.0, video=False, out=None):
-    robot = SO101Sim(cube_pos=cube, box_pos=(0.05, 0.22), render=video, camera="fixed")
+DEFAULT_KEYS = {"top": "observation.images.top", "wrist": "observation.images.wrist"}
+
+
+def run_episode(policy, preprocess, postprocess, device, cube, max_seconds=12.0, video=False, out=None,
+                image_keys=DEFAULT_KEYS, task=TASK, box=(0.05, 0.22), scene_kw=None):
+    """Policy 로 episode 하나를 실행. image_keys 는 카메라 이름 → 관측 키 (SmolVLA 는 camera1/2 를 쓴다)."""
+    robot = SO101Sim(cube_pos=cube, box_pos=box, render=video, camera="fixed", **(scene_kw or {}))
     cams = {"top": SimCamera(robot.model, "top", IMG_W, IMG_H),
             "wrist": SimCamera(robot.model, "wrist_cam", IMG_W, IMG_H)}
     steps_per_frame = int(round(1 / (FPS * robot.model.opt.timestep)))
@@ -37,11 +42,11 @@ def run_episode(policy, preprocess, postprocess, device, cube, max_seconds=12.0,
     success, t_success = False, None
     for i in range(n_frames):
         state = torch.from_numpy(robot.data.qpos[:6].astype(np.float32))
-        obs = {"observation.state": state.unsqueeze(0).to(device), "task": [TASK]}
+        obs = {"observation.state": state.unsqueeze(0).to(device), "task": [task]}
         for k, cam in cams.items():
             rgb, _ = cam.capture(robot.data)
             img = torch.from_numpy(rgb).permute(2, 0, 1).float() / 255.0      # (C,H,W) 0~1
-            obs[f"observation.images.{k}"] = img.unsqueeze(0).to(device)
+            obs[image_keys[k]] = img.unsqueeze(0).to(device)
         obs = preprocess(obs)
         with torch.inference_mode():
             action = policy.select_action(obs)
