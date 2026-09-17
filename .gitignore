@@ -10,3 +10,7 @@ outputs/
 wandb/
 .DS_Store
 Thumbs.db
+# 실행 중 자동으로 내려받는 파일 (2-6의 SO-101 모델, 4-5의 YOLO 가중치, 릴리스 체크포인트)
+third_party/
+*.pt
+*.tar.gz
