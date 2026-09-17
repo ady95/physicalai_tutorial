@@ -22,7 +22,7 @@ from gymnasium import spaces
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common.robot import ARM_JOINTS, GRIPPER_OPEN, SO101Sim  # noqa: E402
 
-TARGET_ABOVE = 0.02       # 블록 중심 위 높이 (3-6 의 GRASP_Z 와 같은 값)
+TARGET_ABOVE = 0.02       # 블록 중심 위 높이 (3-6의 GRASP_Z와 같은 값)
 
 
 class ArmReachEnv(gym.Env):

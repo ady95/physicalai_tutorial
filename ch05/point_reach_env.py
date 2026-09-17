@@ -1,7 +1,7 @@
-"""5부 — 가장 단순한 연속 행동 환경: 점(point) Agent 가 목표 지점까지 이동하기
+"""5부 — 가장 단순한 연속 행동 환경: 점(point) Agent가 목표 지점까지 이동하기
 
 Gymnasium 인터페이스(reset / step / observation_space / action_space)를 갖춘 환경입니다.
-1부의 GridWorld 와 같은 문제지만 위치와 행동이 연속값이고, 강화학습 라이브러리가
+1부의 GridWorld와 같은 문제지만 위치와 행동이 연속값이고, 강화학습 라이브러리가
 그대로 쓸 수 있는 형식입니다.
 
     observation = [agent_x, agent_y, goal_x, goal_y]      (각 -1 ~ 1)

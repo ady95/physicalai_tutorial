@@ -1,7 +1,7 @@
-"""3부 실습 — Inverse Kinematics 로 로봇 손을 빨간 블록 위로 보내기
+"""3부 실습 — Inverse Kinematics로 로봇 손을 빨간 블록 위로 보내기
 
-블록 위치를 읽고 → 그 위(바닥에서 8 cm)를 목표로 IK 를 풀고 → 관절을 움직이고 →
-다시 IK 로 손끝이 블록을 감싸는 높이(2 cm)까지 내려갑니다. 손가락은 항상 아래를 향하게 합니다.
+블록 위치를 읽고 → 그 위(바닥에서 8 cm)를 목표로 IK를 풀고 → 관절을 움직이고 →
+다시 IK로 손끝이 블록을 감싸는 높이(2 cm)까지 내려갑니다. 손가락은 항상 아래를 향하게 합니다.
 
 실행:
     MUJOCO_GL=egl python ch03/ik_reach.py
@@ -51,10 +51,10 @@ def main():
     pos = robot.site_pose()[0]
     print(f"[하강 후] 손끝 {pos}  목표와 거리 {np.linalg.norm(pos - target2) * 100:.2f} cm  관절각 {q2}")
 
-    # 4) IK 의 한계: 손이 닿지 않는 곳
+    # 4) IK의 한계: 손이 닿지 않는 곳
     far = np.array([0.45, 0.0, 0.02])
     q3, err3 = robot.ik(far)
-    print(f"\n[도달 불가 목표] {far} → 오차 {err3:.3f} m (0 에 가까워지지 않음 = 팔 길이 밖)")
+    print(f"\n[도달 불가 목표] {far} → 오차 {err3:.3f} m (0에 가까워지지 않음 = 팔 길이 밖)")
 
     robot.save_video(args.out)
     robot.close()

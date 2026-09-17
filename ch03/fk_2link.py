@@ -1,7 +1,7 @@
 """3부 실습 — Forward Kinematics 이해하기
 
-1) 관절 2개짜리 평면 로봇팔의 FK 를 삼각함수 몇 줄로 직접 계산합니다.
-2) 같은 일을 MuJoCo 가 SO-101 에 대해 어떻게 해 주는지 확인합니다.
+1) 관절 2개짜리 평면 로봇팔의 FK를 삼각함수 몇 줄로 직접 계산합니다.
+2) 같은 일을 MuJoCo가 SO-101에 대해 어떻게 해 주는지 확인합니다.
    관절각을 넣고 mj_forward 만 부르면 손끝 위치가 나옵니다 (물리 시뮬레이션 불필요).
 
 실행:
@@ -21,7 +21,7 @@ np.set_printoptions(precision=3, suppress=True)
 
 
 def fk_2link(theta1, theta2, l1=0.12, l2=0.14):
-    """평면 2관절 로봇팔. theta 는 rad, 길이는 m. 손끝 (x, y) 를 돌려준다."""
+    """평면 2관절 로봇팔. theta는 rad, 길이는 m. 손끝 (x, y)를 돌려준다."""
     x1 = l1 * np.cos(theta1)                     # 첫 관절 끝(팔꿈치)
     y1 = l1 * np.sin(theta1)
     x2 = x1 + l2 * np.cos(theta1 + theta2)       # 두 번째 링크는 누적 각도로
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         hand, elbow = fk_2link(np.radians(t1), np.radians(t2))
         print(f"{t1:8d} {t2:8d}   {str(elbow):<18s} {str(hand):<18s} {np.linalg.norm(hand):.3f}")
 
-    print("\n=== 2) SO-101 의 FK: 관절각 → 손끝 위치 (MuJoCo mj_forward) ===")
+    print("\n=== 2) SO-101의 FK: 관절각 → 손끝 위치 (MuJoCo mj_forward) ===")
     model = mujoco.MjModel.from_xml_path(build_scene())
     data = mujoco.MjData(model)
     site_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_SITE, "gripperframe")
@@ -48,9 +48,9 @@ if __name__ == "__main__":
               [0.5, -1.5, 0.5, 0, 0],        # 대기 자세에서 pan 만 0.5 rad
               [0, -1.57, 1.57, 1.2, 0],      # 손목을 꺾어 손가락이 바닥을 향함
               [0, -1.0, 1.0, 1.2, 0],
-              [0, 0.0, 0.3, 1.27, 0]]:       # 블록 위 (3-5 에서 IK 가 찾아낸 자세와 비슷)
+              [0, 0.0, 0.3, 1.27, 0]]:       # 블록 위 (3-5에서 IK가 찾아낸 자세와 비슷)
         data.qpos[:5] = q
-        mujoco.mj_forward(model, data)       # 운동학만 계산. mj_step 이 아니다
+        mujoco.mj_forward(model, data)       # 운동학만 계산. mj_step이 아니다
         print(f"{str(q):<44s} {data.site_xpos[site_id]}")
 
     print("\n=== 3) 관절 하나를 조금 바꾸면 손끝은 얼마나 움직이나 (수치 미분) ===")
@@ -65,4 +65,4 @@ if __name__ == "__main__":
         data.qpos[:5] = q
         mujoco.mj_forward(model, data)
         dp = (data.site_xpos[site_id] - p0) / eps
-        print(f"{n:<14s} 관절 1 rad 당 손끝 이동 (x,y,z) = {dp}  (크기 {np.linalg.norm(dp):.3f} m/rad)")
+        print(f"{n:<14s} 관절 1 rad당 손끝 이동 (x,y,z) = {dp}  (크기 {np.linalg.norm(dp):.3f} m/rad)")

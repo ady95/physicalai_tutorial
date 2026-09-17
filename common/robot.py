@@ -17,7 +17,7 @@ from common.scene import build_scene
 
 ARM_JOINTS = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll"]
 GRIPPER_JOINT = "gripper"
-SITE = "gripperframe"           # 손끝 기준점 (두 손가락 사이). 이 site 의 x축이 손가락이 향하는 방향
+SITE = "gripperframe"           # 손끝 기준점 (두 손가락 사이). 이 site의 x축이 손가락이 향하는 방향
 DOWN = (0.0, 0.0, -1.0)         # 위에서 내려 집을 때 손가락 방향
 GRIPPER_OPEN = 1.2              # rad, 집게 벌림
 GRIPPER_CLOSED = -0.1           # rad, 집게 오므림 (약간 더 조이도록 음수)
@@ -26,7 +26,7 @@ GRIPPER_CLOSED = -0.1           # rad, 집게 오므림 (약간 더 조이도록
 class SO101Sim:
     def __init__(self, cube_pos=(0.25, 0.0), box_pos=(0.0, 0.25), render=True,
                  camera="fixed", fps=30, width=640, height=480, **scene_kw):
-        """scene_kw 는 build_scene 으로 그대로 전달됩니다 (extra_cubes, light_pos 등, 8부)."""
+        """scene_kw는 build_scene으로 그대로 전달됩니다 (extra_cubes, light_pos 등, 8부)."""
         self.model = mujoco.MjModel.from_xml_path(build_scene(cube_pos, box_pos, **scene_kw))
         self.data = mujoco.MjData(self.model)
         m = self.model
@@ -60,7 +60,7 @@ class SO101Sim:
         return self.data.site_xpos[self.site_id].copy(), self.data.site_xmat[self.site_id].reshape(3, 3).copy()
 
     def cube_pos(self, name=None):
-        """블록 위치. name 이 None 이면 빨간 블록, 아니면 cube_<name> (예: "green")."""
+        """블록 위치. name이 None 이면 빨간 블록, 아니면 cube_<name> (예: "green")."""
         if name is None or name == "red":
             return self.data.xpos[self.cube_id].copy()
         bid = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, f"cube_{name}")
@@ -85,7 +85,7 @@ class SO101Sim:
         self.step(int(seconds / self.model.opt.timestep))
 
     def move_arm(self, q_target, seconds=1.0):
-        """현재 ctrl 에서 목표 관절각까지 선형 보간하며 이동 (급격한 움직임 방지)."""
+        """현재 ctrl에서 목표 관절각까지 선형 보간하며 이동 (급격한 움직임 방지)."""
         q_target = np.asarray(q_target, dtype=float)
         start = self.data.ctrl[self.arm_act].copy()
         n = max(1, int(seconds / self.model.opt.timestep))
@@ -106,11 +106,11 @@ class SO101Sim:
 
     # ---------- IK ----------
     def ik(self, target_pos, target_dir=DOWN, **kw):
-        """손끝을 target_pos 로, 손가락 방향을 target_dir 로 보내는 관절각을 계산만 한다."""
+        """손끝을 target_pos로, 손가락 방향을 target_dir로 보내는 관절각을 계산만 한다."""
         return solve_ik(self.model, self.data, SITE, target_pos, target_dir, ARM_JOINTS, axis=0, **kw)
 
     def move_to(self, target_pos, target_dir=DOWN, seconds=1.0, **kw):
-        """IK 로 관절각을 구한 뒤 그 자세로 이동. (관절각, IK 오차) 를 돌려준다."""
+        """IK로 관절각을 구한 뒤 그 자세로 이동. (관절각, IK 오차)를 돌려준다."""
         q, err = self.ik(target_pos, target_dir, **kw)
         self.move_arm(q, seconds)
         return q, err

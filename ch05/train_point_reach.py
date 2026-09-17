@@ -1,11 +1,11 @@
 """5부 실습 — 처음으로 Reinforcement Learning 해보기
 
-PointReachEnv 에서 (1) 랜덤 Policy 를 평가하고 (2) PPO 로 학습한 뒤 (3) 다시 평가합니다.
+PointReachEnv에서 (1) 랜덤 Policy를 평가하고 (2) PPO로 학습한 뒤 (3) 다시 평가합니다.
 학습 곡선(episode 보상)을 그림으로 저장합니다.
 
 실행:
     python ch05/train_point_reach.py                    # dense reward, 100k steps
-    python ch05/train_point_reach.py --reward sparse    # sparse reward 로 비교
+    python ch05/train_point_reach.py --reward sparse    # sparse reward로 비교
     python ch05/train_point_reach.py --steps 300000
 """
 

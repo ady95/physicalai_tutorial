@@ -1,7 +1,7 @@
 """수치 Inverse Kinematics (Damped Least Squares, Jacobian 기반).
 
-목표: site(손끝 기준점)의 위치를 target_pos 로, 필요하면 site 의 z축 방향을 target_z 로 맞추는
-관절 각도를 찾는다. MuJoCo 가 계산해 주는 Jacobian(mj_jacSite) 을 이용해
+목표: site(손끝 기준점)의 위치를 target_pos로, 필요하면 site의 z축 방향을 target_z로 맞추는
+관절 각도를 찾는다. MuJoCo가 계산해 주는 Jacobian(mj_jacSite)을 이용해
 "관절을 조금 움직이면 손끝이 어디로 가는가"를 매 반복마다 선형 근사하고,
 그 반대 방향으로 관절을 조금씩 고쳐 나간다.
 
@@ -16,7 +16,7 @@ def solve_ik(model, data, site_name, target_pos, target_dir=None, arm_joint_name
              axis=0, max_iters=300, tol=1e-3, damping=1e-2, step=0.5):
     """관절 각도 배열(arm_joint_names 순서)과 최종 오차를 돌려준다.
 
-    target_dir: site 좌표계의 axis 번째 축(SO-101 의 gripperframe 은 x축이 손가락 방향)이
+    target_dir: site 좌표계의 axis 번째 축(SO-101의 gripperframe은 x축이 손가락 방향)이
                 가리켜야 할 단위 벡터. None 이면 위치만 맞춘다.
     """
     site_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_SITE, site_name)

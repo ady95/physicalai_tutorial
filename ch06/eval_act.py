@@ -1,8 +1,8 @@
-"""6부 프로젝트 — 학습한 ACT 에게 Pick and Place 시키기
+"""6부 프로젝트 — 학습한 ACT에게 Pick and Place 시키기
 
-학습된 ACT 체크포인트를 불러와 시뮬레이션에서 여러 episode 를 실행하고 성공률을 잽니다.
+학습된 ACT 체크포인트를 불러와 시뮬레이션에서 여러 episode를 실행하고 성공률을 잽니다.
     Camera + 관절각 → ACT → 행동(목표 각도 6개) → 로봇
-매 1/FPS 초마다 관측을 새로 찍어 Policy 에 넣습니다 (닫힌 고리).
+매 1/FPS 초마다 관측을 새로 찍어 Policy에 넣습니다 (닫힌 고리).
 
 실행:
     MUJOCO_GL=egl python ch06/eval_act.py --checkpoint outputs/train/act_so101/checkpoints/last/pretrained_model
@@ -16,7 +16,6 @@ os.environ.setdefault("SVT_LOG", "0")          # 영상 인코더(SVT-AV1)의 �
 import sys
 import time
 
-import mujoco
 import numpy as np
 import torch
 
@@ -32,7 +31,7 @@ DEFAULT_KEYS = {"top": "observation.images.top", "wrist": "observation.images.wr
 
 def run_episode(policy, preprocess, postprocess, device, cube, max_seconds=12.0, video=False, out=None,
                 image_keys=DEFAULT_KEYS, task=TASK, box=(0.05, 0.22), scene_kw=None, top_camera="top"):
-    """Policy 로 episode 하나를 실행. image_keys 는 카메라 이름 → 관측 키 (SmolVLA 는 camera1/2 를 쓴다)."""
+    """Policy로 episode 하나를 실행. image_keys는 카메라 이름 → 관측 키 (SmolVLA는 camera1/2를 쓴다)."""
     robot = SO101Sim(cube_pos=cube, box_pos=box, render=video, camera="fixed", **(scene_kw or {}))
     cams = {"top": SimCamera(robot.model, top_camera, IMG_W, IMG_H),
             "wrist": SimCamera(robot.model, "wrist_cam", IMG_W, IMG_H)}
@@ -94,7 +93,7 @@ def main():
     preprocess, postprocess = make_pre_post_processors(
         policy.config, args.checkpoint, dataset_stats=stats,
         preprocessor_overrides={"device_processor": {"device": str(device)}})
-    if args.ensemble is not None:                       # 6-6 의 Temporal Ensembling 을 실행 시점에 켠다
+    if args.ensemble is not None:                       # 6-6의 Temporal Ensembling을 실행 시점에 켠다
         from lerobot.policies.act.modeling_act import ACTTemporalEnsembler
         policy.config.temporal_ensemble_coeff = args.ensemble
         policy.config.n_action_steps = 1

@@ -36,7 +36,7 @@ def main():
 
     cap, name = open_source(args)
     if not cap.isOpened():
-        raise SystemExit(f"열 수 없음: {name}  (먼저 3부의 pick_and_place.py 를 실행해 영상을 만드세요)")
+        raise SystemExit(f"열 수 없음: {name}  (먼저 3부의 pick_and_place.py를 실행해 영상을 만드세요)")
 
     # 1) 영상 정보
     w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -51,8 +51,8 @@ def main():
     ok, frame = cap.read()
     if not ok:
         raise SystemExit("프레임을 읽지 못했습니다")
-    print(f"frame: shape={frame.shape}, dtype={frame.dtype}  (높이, 너비, 채널) — OpenCV 는 BGR 순서")
-    print(f"픽셀 (240, 320) 의 BGR 값 = {frame[240, 320]}")
+    print(f"frame: shape={frame.shape}, dtype={frame.dtype}  (높이, 너비, 채널) — OpenCV는 BGR 순서")
+    print(f"픽셀 (240, 320)의 BGR 값 = {frame[240, 320]}")
 
     # 3) 색 공간 변환
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

@@ -1,7 +1,7 @@
 """6부 실습 — Demonstration Dataset 만들어보기
 
-3부의 Rule 기반 Pick and Place 를 "시연자"로 삼아, 시뮬레이션에서 여러 episode 를 실행하며
-(관측, 행동) 을 LeRobotDataset 형식으로 기록합니다. 사람이 조종 장치로 시연하는 것을
+3부의 Rule 기반 Pick and Place를 "시연자"로 삼아, 시뮬레이션에서 여러 episode를 실행하며
+(관측, 행동)을 LeRobotDataset 형식으로 기록합니다. 사람이 조종 장치로 시연하는 것을
 프로그램이 대신하는 것입니다.
 
     관측 = 관절각 6개 (observation.state) + 카메라 2대 이미지 (observation.images.top / .wrist)
@@ -36,7 +36,7 @@ JOINT_NAMES = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wri
 
 
 class RecordingRobot(SO101Sim):
-    """SO101Sim 과 같지만, 1/FPS 초마다 (관측, 행동) 프레임을 기록한다."""
+    """SO101Sim과 같지만, 1/FPS 초마다 (관측, 행동) 프레임을 기록한다."""
 
     def __init__(self, dataset=None, task=TASK, top_camera="top", **kw):
         super().__init__(render=False, **kw)
@@ -75,7 +75,7 @@ class RecordingRobot(SO101Sim):
 
 
 def scripted_pick_and_place(robot):
-    """3-6 과 같은 다섯 단계. 성공 여부를 돌려준다."""
+    """3-6과 같은 다섯 단계. 성공 여부를 돌려준다."""
     cube, box = robot.cube_pos(), robot.box_pos()
     robot.open_gripper(0.5)
     robot.move_to(above(cube, APPROACH_Z), seconds=1.2)
@@ -99,6 +99,17 @@ def random_cube(rng):
     return (float(r * np.cos(th)), float(r * np.sin(th)))
 
 
+def prepare_root(root, overwrite):
+    """기록할 폴더가 이미 있으면 --overwrite를 준 경우에만 지운다. 모르고 다시 실행해 데이터를 잃지 않게."""
+    if not os.path.exists(root):
+        return
+    if not overwrite:
+        sys.exit(f"오류: {root}에 데이터셋이 이미 있습니다. 지우고 새로 기록하려면 --overwrite를 붙이고, "
+                 f"남겨 두려면 --root와 --repo-id를 다른 이름으로 주세요.")
+    print(f"기존 데이터셋 삭제: {root}")
+    shutil.rmtree(root)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--episodes", type=int, default=50)
@@ -106,14 +117,13 @@ def main():
     ap.add_argument("--repo-id", default="physicalai/so101_pickplace_sim")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--keep-failed", action="store_true", help="실패한 시연도 저장")
-    ap.add_argument("--cube", type=float, nargs=2, default=None, help="블록 위치를 고정 (8-2 의 일반화 실험용)")
+    ap.add_argument("--cube", type=float, nargs=2, default=None, help="블록 위치를 고정 (8-2의 일반화 실험용)")
     ap.add_argument("--top-camera", default="top", help="위 카메라 이름 (top 또는 top_zoom)")
+    ap.add_argument("--overwrite", action="store_true", help="--root 폴더가 이미 있으면 지우고 새로 기록")
     args = ap.parse_args()
+    prepare_root(args.root, args.overwrite)
 
     from lerobot.datasets import LeRobotDataset
-
-    if os.path.exists(args.root):
-        shutil.rmtree(args.root)
 
     features = {
         "observation.state": {"dtype": "float32", "shape": (6,), "names": JOINT_NAMES},

@@ -1,9 +1,9 @@
 """SO-101 로봇팔 + 책상 + 블록 장면(MJCF)을 만드는 도우미.
 
 3부부터 8부까지 같은 장면을 조금씩 바꿔 가며 사용합니다.
-Menagerie의 so101.xml 을 include 해야 하는데, MuJoCo는 include 경로와 mesh 경로를
+Menagerie의 so101.xml을 include 해야 하는데, MuJoCo는 include 경로와 mesh 경로를
 "메인 XML 파일이 있는 폴더" 기준으로 찾습니다. 그래서 장면 XML을 문자열로 만든 뒤
-so101.xml 과 같은 폴더에 파일로 써 놓고 그 경로를 돌려줍니다.
+so101.xml과 같은 폴더에 파일로 써 놓고 그 경로를 돌려줍니다.
 """
 
 import hashlib
@@ -81,12 +81,12 @@ def build_scene(cube_pos=(0.25, 0.0), box_pos=(0.0, 0.25), extra_cubes=None,
                 top_cam_pos=(0.2, 0.0, 0.8)) -> str:
     """장면 XML 파일을 so101.xml 옆에 쓰고 경로를 돌려줍니다.
 
-    extra_cubes: [("green", (x, y)), ("yellow", (x, y))] 처럼 추가 블록 (8부).
-    light_pos / light_diffuse / floor_rgba / top_cam_pos: 8-3 의 환경 변화 실험용.
+    extra_cubes: [("green", (x, y)), ("yellow", (x, y))]처럼 추가 블록 (8부).
+    light_pos / light_diffuse / floor_rgba / top_cam_pos: 8-3의 환경 변화 실험용.
 
     파일 이름에 내용의 해시를 붙여, 같은 장면은 같은 파일을 재사용하고
     여러 프로세스가 동시에 써도(5부의 병렬 환경) 서로 덮어쓰지 않게 합니다.
-    쓰기는 임시 파일에 한 뒤 os.replace 로 바꿔치기(원자적)합니다.
+    쓰기는 임시 파일에 한 뒤 os.replace로 바꿔치기(원자적)합니다.
     """
     robot_dir = os.path.dirname(so101_xml("so101.xml"))
     extra_xml, extra_qpos = "", ""

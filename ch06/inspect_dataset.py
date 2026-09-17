@@ -1,8 +1,8 @@
 """6부 실습 — LeRobot 데이터셋 열어보기 / 뜯어보기
 
-1) Hugging Face Hub 의 공개 데이터셋 메타데이터를 읽고 (다운로드 거의 없음)
+1) Hugging Face Hub의 공개 데이터셋 메타데이터를 읽고 (다운로드 거의 없음)
 2) 로컬(또는 Hub) 데이터셋에서 프레임 하나를 꺼내 구조를 출력하고
-3) 한 episode 의 관절각·행동을 그림으로 저장합니다.
+3) 한 episode의 관절각·행동을 그림으로 저장합니다.
 
 실행:
     python ch06/inspect_dataset.py                                   # Hub 공개 데이터셋
@@ -13,7 +13,6 @@ import argparse
 import os
 
 os.environ.setdefault("SVT_LOG", "0")          # 영상 인코더(SVT-AV1)의 장황한 로그 끄기
-from pprint import pprint
 
 import numpy as np
 
@@ -23,7 +22,7 @@ OUT = "outputs/ch06"
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo-id", default="lerobot/svla_so101_pickplace")
-    ap.add_argument("--root", default=None, help="로컬 데이터셋 폴더 (없으면 Hub 에서 받음)")
+    ap.add_argument("--root", default=None, help="로컬 데이터셋 폴더 (없으면 Hub에서 받음)")
     ap.add_argument("--episode", type=int, default=0)
     args = ap.parse_args()
     os.makedirs(OUT, exist_ok=True)
@@ -37,7 +36,7 @@ def main():
     print(f"robot_type    : {meta.robot_type}")
     print(f"fps           : {meta.fps}")
     print(f"episodes      : {meta.total_episodes}")
-    print(f"frames        : {meta.total_frames}  (episode 당 평균 {meta.total_frames / meta.total_episodes:.1f})")
+    print(f"frames        : {meta.total_frames}  (episode당 평균 {meta.total_frames / meta.total_episodes:.1f})")
     print(f"camera keys   : {meta.camera_keys}")
     print(f"tasks         : {list(meta.tasks.index) if hasattr(meta.tasks, 'index') else meta.tasks}")
     print("features:")
@@ -49,7 +48,7 @@ def main():
     print(f"\n=== episode {args.episode} ===")
     print(f"frames: {ds.num_frames}")
     sample = ds[0]
-    print("frame 0 의 내용:")
+    print("frame 0의 내용:")
     for k, v in sample.items():
         if hasattr(v, "shape"):
             print(f"  {k:<28s} {str(tuple(v.shape)):<16s} {v.dtype}")

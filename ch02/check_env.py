@@ -1,6 +1,6 @@
 """2부 실습 — 개발환경 확인
 
-Python / PyTorch / CUDA / MuJoCo / OpenCV 가 제대로 설치되었는지 한 번에 확인합니다.
+Python / PyTorch / CUDA / MuJoCo / OpenCV가 제대로 설치되었는지 한 번에 확인합니다.
 
 실행:
     python ch02/check_env.py

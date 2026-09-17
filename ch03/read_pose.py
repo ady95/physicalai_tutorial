@@ -1,7 +1,7 @@
 """3부 실습 — 가상 물체의 Pose 읽기
 
 로봇팔 + 블록 + 상자 장면에서 블록, 상자, 로봇 손끝의 Pose(위치 + 자세)를 읽습니다.
-자세는 Quaternion 으로 저장되어 있는데, 사람이 읽기 쉬운 Roll / Pitch / Yaw 로도 바꿔 봅니다.
+자세는 Quaternion으로 저장되어 있는데, 사람이 읽기 쉬운 Roll / Pitch / Yaw 로도 바꿔 봅니다.
 
 실행:
     python ch03/read_pose.py
@@ -41,17 +41,17 @@ if __name__ == "__main__":
     mujoco.mj_resetDataKeyframe(model, data, 0)      # 로봇을 home 자세로
     mujoco.mj_forward(model, data)                   # 위치·자세 계산
 
-    print("=== home 자세에서 각 Body 의 Pose ===")
+    print("=== home 자세에서 각 Body의 Pose ===")
     for name in ["cube", "box", "gripper"]:
         print_body_pose(model, data, name)
 
     site_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_SITE, "gripperframe")
     R = data.site_xmat[site_id].reshape(3, 3)
     print(f"\n손끝 site 'gripperframe' 위치 = {data.site_xpos[site_id]}")
-    print(f"손끝 site 의 x축(손가락 방향) = {R[:, 0]}")
+    print(f"손끝 site의 x축(손가락 방향) = {R[:, 0]}")
 
-    print("\n=== 블록을 45도 돌려 놓으면 Quaternion 은? ===")
-    # freejoint 의 qpos: [x, y, z, qw, qx, qy, qz]
+    print("\n=== 블록을 45도 돌려 놓으면 Quaternion은? ===")
+    # freejoint의 qpos: [x, y, z, qw, qx, qy, qz]
     jid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "cube_free")
     adr = model.jnt_qposadr[jid]
     yaw = np.radians(45)

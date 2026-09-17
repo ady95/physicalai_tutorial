@@ -1,6 +1,6 @@
 """4부 실습 — YOLO로 물체 검출하기
 
-Ultralytics YOLO 의 사전학습 모델(COCO 80 클래스)로 이미지에서 물체를 찾습니다.
+Ultralytics YOLO의 사전학습 모델(COCO 80 클래스)로 이미지에서 물체를 찾습니다.
 1) 실제 사진(bus.jpg, 자동 다운로드) 2) 우리 시뮬레이션 카메라 이미지 에 각각 적용해 봅니다.
 
 실행:
@@ -50,13 +50,13 @@ def main():
     # 1) 실제 사진
     detect(model, "https://ultralytics.com/images/bus.jpg", "bus")
 
-    # 2) 시뮬레이션 카메라 이미지 (4-6 에서 저장한 것)
+    # 2) 시뮬레이션 카메라 이미지 (4-6에서 저장한 것)
     for name in ["cam_fixed_rgb.png", "cam_top_rgb.png"]:
         path = f"{OUT}/{name}"
         if os.path.exists(path):
             detect(model, path, name.replace("_rgb.png", ""))
         else:
-            print(f"\n{path} 가 없습니다. 먼저 ch04/sim_camera.py 를 실행하세요.")
+            print(f"\n{path}가 없습니다. 먼저 ch04/sim_camera.py를 실행하세요.")
 
 
 if __name__ == "__main__":

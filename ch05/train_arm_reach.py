@@ -1,6 +1,6 @@
 """5부 실습 — 로봇팔을 강화학습으로 움직여보자
 
-ArmReachEnv 에서 PPO 로 "손끝을 블록 위로" 보내는 Policy 를 학습합니다.
+ArmReachEnv에서 PPO로 "손끝을 블록 위로" 보내는 Policy를 학습합니다.
 Reward 설계(sparse / dense / shaped)에 따라 결과가 어떻게 달라지는지 비교하는 것이 목적입니다.
 
 실행:

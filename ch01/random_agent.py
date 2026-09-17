@@ -1,6 +1,6 @@
 """1부 실습 2 — 랜덤하게 움직이는 Agent 만들기
 
-2차원 격자 세계(GridWorld)에서 Observation / State / Action / Reward / Episode 를
+2차원 격자 세계(GridWorld)에서 Observation / State / Action / Reward / Episode를
 코드로 확인합니다. 랜덤 Policy와 규칙 기반 Policy를 여러 Episode 돌려 비교합니다.
 
 실행:
@@ -39,7 +39,7 @@ class GridWorld:
         return {"agent": self.agent, "goal": self.goal}
 
     def step(self, action):
-        """행동을 적용하고 (observation, reward, done) 을 돌려줍니다."""
+        """행동을 적용하고 (observation, reward, done)을 돌려줍니다."""
         dx, dy = ACTIONS[action]
         x = min(self.size - 1, max(0, self.agent[0] + dx))
         y = min(self.size - 1, max(0, self.agent[1] + dy))

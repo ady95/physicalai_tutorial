@@ -1,6 +1,6 @@
 """4부 프로젝트 — Vision과 Robot을 연결하자
 
-3부의 Pick and Place 에서 "시뮬레이터에서 위치를 읽는" 두 줄만 "카메라로 찾는" 코드로 바꿉니다.
+3부의 Pick and Place에서 "시뮬레이터에서 위치를 읽는" 두 줄만 "카메라로 찾는" 코드로 바꿉니다.
     Camera → Color Detection → Object Position → Robot Controller → Robot Arm
 
 실행:

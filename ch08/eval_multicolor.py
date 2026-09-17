@@ -1,6 +1,6 @@
-"""8부 프로젝트 1 — 블록 세 개 장면에서 SmolVLA 에게 색을 지정해 집게 하기
+"""8부 프로젝트 1 — 블록 세 개 장면에서 SmolVLA에게 색을 지정해 집게 하기
 
-"Pick up the {color} cube ..." 명령을 바꿔 가며 SmolVLA 를 실행하고,
+"Pick up the {color} cube ..." 명령을 바꿔 가며 SmolVLA를 실행하고,
 지정한 색의 블록이 상자에 들어갔는지(성공), 다른 색을 집었는지(오답)를 셉니다.
 
 실행:
@@ -21,7 +21,7 @@ import torch
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ch03.pick_and_place import is_in_box  # noqa: E402
 from ch06.record_demos import FPS, IMG_H, IMG_W  # noqa: E402
-from ch07.eval_smolvla import SMOLVLA_KEYS, load_smolvla  # noqa: E402
+from ch07.eval_smolvla import SMOLVLA_KEYS, load_smolvla, seed_noise  # noqa: E402
 from ch08.record_multicolor import COLORS, TASK_FMT, random_layout  # noqa: E402
 from common.robot import SO101Sim  # noqa: E402
 from common.vision import SimCamera  # noqa: E402
@@ -68,7 +68,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--checkpoint", required=True)
     ap.add_argument("--episodes-per-color", type=int, default=10)
-    ap.add_argument("--seed", type=int, default=2000)
+    ap.add_argument("--seed", type=int, default=2000, help="블록 배치를 뽑는 seed")
+    ap.add_argument("--noise-seed", type=int, default=0, help="행동 생성 noise의 seed (배치마다 +1, 한 배치의 세 명령은 같은 noise)")
     ap.add_argument("--video", action="store_true")
     ap.add_argument("--out", default="outputs/ch08_multicolor.mp4")
     ap.add_argument("--top-camera", default="top")
@@ -82,6 +83,7 @@ def main():
     for i in range(args.episodes_per_color):
         layout = random_layout(rng)                       # 같은 배치에서 세 가지 색을 차례로 시킨다
         for color in COLORS:
+            seed_noise(args.noise_seed + i)               # 문장만 다르고 noise는 같게
             res = run_episode(policy, preprocess, postprocess, device, layout, color,
                               video=(args.video and i == 0 and color == "green"), out=args.out, top_camera=args.top_camera)
             stats[color][res.split("(")[0]] += 1

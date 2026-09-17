@@ -1,7 +1,7 @@
 """8부 프로젝트 1 — 블록 세 개(빨강·초록·노랑) 장면에서 색을 지정하는 시연 데이터셋 만들기
 
-6-5 의 record_demos.py 와 같지만 장면에 블록이 세 개 있고, episode 마다 집을 색이 바뀌며
-task 문장에 그 색이 들어갑니다. SmolVLA 가 문장의 색을 보고 다른 블록을 집는지 시험하는 데 씁니다.
+6-5의 record_demos.py와 같지만 장면에 블록이 세 개 있고, episode 마다 집을 색이 바뀌며
+task 문장에 그 색이 들어갑니다. SmolVLA가 문장의 색을 보고 다른 블록을 집는지 시험하는 데 씁니다.
 
     task = "Pick up the red cube and put it in the blue box."   (red / green / yellow 순환)
 
@@ -13,7 +13,6 @@ import argparse
 import os
 
 os.environ.setdefault("SVT_LOG", "0")
-import shutil
 import sys
 import time
 
@@ -21,7 +20,7 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ch03.pick_and_place import APPROACH_Z, GRASP_Z, LIFT_Z, PLACE_Z, above, is_in_box  # noqa: E402
-from ch06.record_demos import FPS, IMG_H, IMG_W, JOINT_NAMES, RecordingRobot  # noqa: E402
+from ch06.record_demos import FPS, IMG_H, IMG_W, JOINT_NAMES, RecordingRobot, prepare_root  # noqa: E402
 
 COLORS = ["red", "green", "yellow"]
 TASK_FMT = "Pick up the {color} cube and put it in the blue box."
@@ -39,7 +38,7 @@ def random_layout(rng, n=3, min_gap=0.07):
 
 
 def make_robot(layout, dataset=None, task=None, top_camera="top", **kw):
-    """빨간 블록은 기본 cube, 초록·노랑은 extra_cubes 로."""
+    """빨간 블록은 기본 cube, 초록·노랑은 extra_cubes로."""
     red, green, yellow = layout
     return RecordingRobot(dataset=dataset, task=task, top_camera=top_camera, cube_pos=red, box_pos=(0.05, 0.22),
                           extra_cubes=[("green", green), ("yellow", yellow)], **kw)
@@ -72,12 +71,12 @@ def main():
     ap.add_argument("--repo-id", default="physicalai/so101_multicolor_sim")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--top-camera", default="top", help="위 카메라 이름 (top 또는 top_zoom)")
+    ap.add_argument("--overwrite", action="store_true", help="--root 폴더가 이미 있으면 지우고 새로 기록")
     args = ap.parse_args()
+    prepare_root(args.root, args.overwrite)
 
     from lerobot.datasets import LeRobotDataset
 
-    if os.path.exists(args.root):
-        shutil.rmtree(args.root)
     features = {
         "observation.state": {"dtype": "float32", "shape": (6,), "names": JOINT_NAMES},
         "action": {"dtype": "float32", "shape": (6,), "names": JOINT_NAMES},

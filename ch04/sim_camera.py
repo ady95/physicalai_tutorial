@@ -2,7 +2,7 @@
 
 장면에 정의된 카메라(top, side, front)와 로봇 손목 카메라(wrist_cam)로
 RGB 이미지와 Depth 이미지를 찍어 저장합니다. 카메라의 위치·시야각을 출력하고,
-한 픽셀의 depth 로 월드 좌표를 되찾는 것(unprojection)을 확인합니다.
+한 픽셀의 depth로 월드 좌표를 되찾는 것(unprojection)을 확인합니다.
 
 실행:
     MUJOCO_GL=egl python ch04/sim_camera.py
@@ -56,7 +56,7 @@ def main():
     rgb, depth = cam.capture(data)
     cv2.imwrite(f"{OUT}/cam_wrist_cam_above_rgb.png", cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR))
     save_depth_png(depth, f"{OUT}/cam_wrist_cam_above_depth.png", max_m=0.3)
-    print(f"  {'wrist_cam':<10s} (블록 위 8 cm 로 이동 후)  depth min {depth.min():.3f} m  max {depth.max():.3f} m")
+    print(f"  {'wrist_cam':<10s} (블록 위 8 cm로 이동 후)  depth min {depth.min():.3f} m  max {depth.max():.3f} m")
     cam.close()
     robot.reset()
 
@@ -64,7 +64,7 @@ def main():
     cam = SimCamera(model, camera="top", width=640, height=480)
     rgb, depth = cam.capture(data)
     print(f"  초점 거리 f = {cam.f:.1f} px  (fovy {model.cam_fovy[cam.cam_id]:.0f}deg, 세로 480px)")
-    print(f"  카메라 위치 {data.cam_xpos[cam.cam_id]},  회전행렬의 z축 {data.cam_xmat[cam.cam_id].reshape(3,3)[:,2]} (카메라는 -z 를 본다)")
+    print(f"  카메라 위치 {data.cam_xpos[cam.cam_id]},  회전행렬의 z축 {data.cam_xmat[cam.cam_id].reshape(3,3)[:,2]} (카메라는 -z를 본다)")
 
     # 이미지 중앙 픽셀 → 바닥의 어느 점인가
     u, v = 320, 240

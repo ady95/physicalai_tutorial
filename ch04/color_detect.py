@@ -14,7 +14,7 @@ import os
 import cv2
 import numpy as np
 
-# HSV 범위 (OpenCV 의 H 는 0~179). 빨강은 0 근처와 179 근처 두 구간에 걸쳐 있다.
+# HSV 범위 (OpenCV의 H는 0~179). 빨강은 0 근처와 179 근처 두 구간에 걸쳐 있다.
 COLOR_RANGES = {
     "red": [((0, 120, 70), (10, 255, 255)), ((170, 120, 70), (179, 255, 255))],
     "blue": [((100, 120, 70), (130, 255, 255))],
@@ -23,7 +23,7 @@ COLOR_RANGES = {
 
 
 def find_color(frame_bgr, color="red", min_area=30):
-    """색 마스크 → 가장 큰 덩어리의 중심 (u, v) 와 면적. 없으면 None."""
+    """색 마스크 → 가장 큰 덩어리의 중심 (u, v)와 면적. 없으면 None."""
     hsv = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2HSV)
     mask = np.zeros(hsv.shape[:2], dtype=np.uint8)
     for lo, hi in COLOR_RANGES[color]:

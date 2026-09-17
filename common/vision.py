@@ -17,7 +17,7 @@ COLOR_RANGES = {
 
 
 class SimCamera:
-    """MuJoCo 카메라 하나를 RGB + Depth 로 찍는 객체."""
+    """MuJoCo 카메라 하나를 RGB + Depth로 찍는 객체."""
 
     def __init__(self, model, camera="top", width=640, height=480):
         self.model = model
@@ -31,7 +31,7 @@ class SimCamera:
         self.cx, self.cy = width / 2, height / 2
 
     def capture(self, data):
-        """(rgb [H,W,3] uint8, depth [H,W] float m) 을 돌려준다."""
+        """(rgb [H,W,3] uint8, depth [H,W] float m)을 돌려준다."""
         self.rgb_renderer.update_scene(data, camera=self.cam_id)
         rgb = self.rgb_renderer.render().copy()
         self.depth_renderer.update_scene(data, camera=self.cam_id)
@@ -39,9 +39,9 @@ class SimCamera:
         return rgb, depth
 
     def pixel_to_world(self, data, u, v, depth):
-        """픽셀 (u, v) 와 그 픽셀의 depth(카메라 축 방향 거리) → 월드 좌표 (x, y, z)."""
+        """픽셀 (u, v)와 그 픽셀의 depth(카메라 축 방향 거리) → 월드 좌표 (x, y, z)."""
         x_cam = (u - self.cx) / self.f * depth
-        y_cam = -(v - self.cy) / self.f * depth            # 이미지 세로는 아래가 +, 카메라 y 는 위가 +
+        y_cam = -(v - self.cy) / self.f * depth            # 이미지 세로는 아래가 +, 카메라 y는 위가 +
         z_cam = -depth                                      # MuJoCo 카메라는 -z 방향을 본다
         p_cam = np.array([x_cam, y_cam, z_cam])
         R = data.cam_xmat[self.cam_id].reshape(3, 3)
@@ -62,7 +62,7 @@ def color_mask(rgb, color):
 
 
 def find_color_center(rgb, color, min_area=20):
-    """RGB 이미지에서 color 의 가장 큰 덩어리 중심 (u, v), 면적, bbox. 없으면 None."""
+    """RGB 이미지에서 color의 가장 큰 덩어리 중심 (u, v), 면적, bbox. 없으면 None."""
     mask = color_mask(rgb, color)
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     if not contours:
@@ -84,7 +84,7 @@ def locate_object(cam, data, color, rgb=None, depth=None):
     if det is None:
         return None, None
     u, v = det["center"]
-    # 중심 픽셀 주변 3x3 의 depth 중앙값 (가장자리 픽셀의 배경 depth 를 피함)
+    # 중심 픽셀 주변 3x3의 depth 중앙값 (가장자리 픽셀의 배경 depth를 피함)
     ui, vi = int(round(u)), int(round(v))
     patch = depth[max(vi - 1, 0): vi + 2, max(ui - 1, 0): ui + 2]
     d = float(np.median(patch))

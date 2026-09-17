@@ -15,7 +15,7 @@ ACT_STEPS=${ACT_STEPS:-20000}
 VLA_STEPS=${VLA_STEPS:-10000}
 RENAME='{"observation.images.top": "observation.images.camera1", "observation.images.wrist": "observation.images.camera2"}'
 
-run ch06_record        python ch06/record_demos.py --episodes 50 --root $DS
+run ch06_record        python ch06/record_demos.py --episodes 50 --overwrite --root $DS
 run ch06_inspect_local python ch06/inspect_dataset.py --root $DS --repo-id physicalai/so101_pickplace_sim
 run ch06_train_act     lerobot-train --dataset.repo_id=physicalai/so101_pickplace_sim --dataset.root=$DS \
     --policy.type=act --policy.chunk_size=50 --policy.n_action_steps=50 --policy.device=cuda --policy.push_to_hub=false \

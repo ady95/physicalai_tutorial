@@ -74,7 +74,7 @@ def main():
                 frames.append(renderer.render().copy())
 
     print()
-    print("관절을 하나씩 움직여 봅니다 (각 관절: 범위의 60% → 0 으로 복귀)")
+    print("관절을 하나씩 움직여 봅니다 (각 관절: 범위의 60% → 0으로 복귀)")
     print(f"{'actuator':<14s} {'ctrl':>7s}   hand x      y      z   (m)")
     print(f"{'(초기 자세)':<14s} {0.0:>7.3f}   " + "  ".join(f"{v:+.3f}" for v in data.xpos[hand_id]))
 

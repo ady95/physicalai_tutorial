@@ -35,7 +35,7 @@ WORLD_XML = """
       <geom type="box" size="0.4 0.3 0.2" rgba="0.6 0.4 0.2 1" friction="{friction} 0.005 0.0001"/>
     </body>
 
-    <!-- 빨간 블록: 책상 위 0.5m 공중에서 시작, freejoint 로 자유롭게 움직임 -->
+    <!-- 빨간 블록: 책상 위 0.5m 공중에서 시작, freejoint로 자유롭게 움직임 -->
     <body name="cube" pos="0.1 0 0.9" euler="20 30 0">
       <freejoint/>
       <geom type="box" size="0.03 0.03 0.03" mass="{mass}" rgba="1 0.1 0.1 1"

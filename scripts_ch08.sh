@@ -21,7 +21,7 @@ run ch08_robustness    python ch08/robustness.py --checkpoint $ACT --episodes 10
 
 # 8-2
 DSF=outputs/datasets/so101_fixed_sim
-run ch08_record_fixed  python ch06/record_demos.py --episodes 20 --root $DSF --repo-id physicalai/so101_fixed_sim --cube 0.24 0.0 --top-camera $TOPCAM
+run ch08_record_fixed  python ch06/record_demos.py --episodes 20 --overwrite --root $DSF --repo-id physicalai/so101_fixed_sim --cube 0.24 0.0 --top-camera $TOPCAM
 run ch08_train_fixed   lerobot-train --dataset.repo_id=physicalai/so101_fixed_sim --dataset.root=$DSF \
     --policy.type=act --policy.chunk_size=50 --policy.n_action_steps=50 --policy.device=cuda --policy.push_to_hub=false \
     --output_dir=outputs/train/act_fixed --job_name=act_fixed --steps=8000 --batch_size=16 --save_freq=4000 --log_freq=500 --wandb.enable=false
@@ -49,6 +49,9 @@ run ch08_diag_multi    python ch08/diagnose_language.py --checkpoint outputs/tra
 # 8-1의 6단계(데이터·학습량 두 배) 재현 — 기록 약 27분 + 학습 약 2시간 15분 (RTX 3060 기준)
 #   DS=outputs/datasets/so101_multicolor_sim_240
 #   MUJOCO_GL=egl python ch08/record_multicolor.py --episodes 240 --root $DS --repo-id physicalai/so101_multicolor_sim_240
-#   lerobot-train --policy.path=lerobot/smolvla_base --dataset.repo_id=physicalai/so101_multicolor_sim_240 --dataset.root=$DS \n#     --rename_map="$RENAME" --policy.device=cuda --policy.push_to_hub=false \n#     --output_dir=outputs/train/smolvla_multicolor_v2 --job_name=smolvla_multicolor_v2 --steps=20000 --batch_size=8 \n#     --save_freq=5000 --log_freq=250 --wandb.enable=false
+#   lerobot-train --policy.path=lerobot/smolvla_base --dataset.repo_id=physicalai/so101_multicolor_sim_240 --dataset.root=$DS \
+#     --rename_map="$RENAME" --policy.device=cuda --policy.push_to_hub=false \
+#     --output_dir=outputs/train/smolvla_multicolor_v2 --job_name=smolvla_multicolor_v2 --steps=20000 --batch_size=8 \
+#     --save_freq=5000 --log_freq=250 --wandb.enable=false
 # 학습을 건너뛰려면 릴리스의 smolvla_multicolor_v2_20k.tar.gz 를 쓴다.
 echo "done $(date +%H:%M:%S)"

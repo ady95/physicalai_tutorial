@@ -1,7 +1,7 @@
 """3부 프로젝트 — Rule 기반 Pick and Place
 
-빨간 블록을 집어서 파란 상자 안에 넣습니다. AI 는 없습니다.
-Approach → Grasp → Lift → Move → Place 의 다섯 단계를 상태 기계(state machine)로 짭니다.
+빨간 블록을 집어서 파란 상자 안에 넣습니다. AI는 없습니다.
+Approach → Grasp → Lift → Move → Place의 다섯 단계를 상태 기계(state machine)로 짭니다.
 블록과 상자의 위치는 시뮬레이터에서 직접 읽습니다 (4부에서 카메라로 바꿉니다).
 
 실행:
@@ -22,14 +22,14 @@ from common.robot import SO101Sim  # noqa: E402
 np.set_printoptions(precision=3, suppress=True)
 
 # 손끝(두 손가락 사이 기준점)의 목표 높이. 모두 바닥 기준 절대 높이(m)
-APPROACH_Z = 0.08     # 블록 위 8 cm 에서 접근
+APPROACH_Z = 0.08     # 블록 위 8 cm에서 접근
 GRASP_Z = 0.02        # 블록 중심(0.015)보다 5 mm 위. 손가락이 블록 옆면을 감싸는 높이
 LIFT_Z = 0.12         # 집은 뒤 들어 올리는 높이
 PLACE_Z = 0.06        # 상자 위에서 놓는 높이
 
 
 def above(xy, z):
-    """(x, y) 위 높이 z 의 목표점."""
+    """(x, y) 위 높이 z의 목표점."""
     return np.array([xy[0], xy[1], z])
 
 
@@ -40,11 +40,11 @@ def is_in_box(cube_pos, box_pos, half=0.05):
 
 def pick_and_place(robot, verbose=True):
     """다섯 단계를 차례로 실행하고 성공 여부를 돌려준다."""
-    cube = robot.cube_pos()          # 시뮬레이터에서 직접 읽는 State (4부에서 Observation 으로 바뀜)
+    cube = robot.cube_pos()          # 시뮬레이터에서 직접 읽는 State (4부에서 Observation으로 바뀜)
     box = robot.box_pos()
     log = (lambda *a: print(*a)) if verbose else (lambda *a: None)
 
-    # 1. Approach: 집게를 벌리고 블록 위 8 cm 로
+    # 1. Approach: 집게를 벌리고 블록 위 8 cm로
     log("1 Approach")
     robot.open_gripper(0.5)
     _, err = robot.move_to(above(cube, APPROACH_Z), seconds=1.2)
