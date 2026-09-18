@@ -3,13 +3,25 @@
 #   1) 시연 데이터셋 50 episode 기록
 #   2) ACT 학습 → 평가
 #   3) SmolVLA 사전학습 모델 그대로 평가 → 파인튜닝 → 평가
-set -u
+set -uo pipefail
 cd "$(dirname "$0")"
 source .venv/bin/activate
 export MUJOCO_GL=egl SVT_LOG=0
 mkdir -p outputs/logs
-F='Warning|warn|torchcodec|libtorchcodec|libav|it/s\]|B/s\]|Map:|mp4 @|Exception ignored|Traceback|File "|EGLError|glCheckError|^\s*$'
-run() { name=$1; shift; echo "=== $name  $(date +%H:%M:%S) ==="; "$@" 2>&1 | grep -vE "$F" | tee "outputs/logs/$name.txt" | tail -${TAIL:-8}; }
+F='Warning|warn|torchcodec|libtorchcodec|libav|it/s\]|B/s\]|Map:|mp4 @|EGLError|glCheckError|^\s*$'
+run() {
+  name=$1; shift
+  echo "=== $name  $(date +%H:%M:%S) ==="
+  "$@" > "outputs/logs/$name.raw" 2>&1
+  rc=$?
+  grep -vE "$F" "outputs/logs/$name.raw" > "outputs/logs/$name.txt" || true
+  if [ $rc -ne 0 ]; then
+    echo "!!! $name 실패 (exit $rc). 원본 로그 outputs/logs/$name.raw 의 마지막 40줄:"
+    tail -40 "outputs/logs/$name.raw"
+    exit $rc
+  fi
+  tail -${TAIL:-8} "outputs/logs/$name.txt"
+}
 DS=outputs/datasets/so101_pickplace_sim
 ACT_STEPS=${ACT_STEPS:-20000}
 VLA_STEPS=${VLA_STEPS:-10000}

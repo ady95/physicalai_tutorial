@@ -5,7 +5,7 @@
 
 SmolVLA는 행동을 만들 때마다 무작위 noise를 쓰므로 비교를 두 가지로 나눕니다.
   - 문장 효과: noise seed를 고정하고 문장만 바꿨을 때 최종 위치가 얼마나 달라지는가
-  - noise 효과: 문장을 고정하고 noise seed 만 바꿨을 때 최종 위치가 얼마나 달라지는가
+  - noise 효과: 문장을 고정하고 noise seed만 바꿨을 때 최종 위치가 얼마나 달라지는가
 문장 효과가 noise 효과보다 뚜렷하게 커야 "언어가 행동을 바꾼다"고 말할 수 있습니다.
 
 실행:
@@ -99,7 +99,7 @@ def main():
     by_sentence = np.mean([mean_pairwise([final[(s, t)] for t in TASKS]) for s in args.seeds])
     by_noise = np.mean([mean_pairwise([final[(s, t)] for s in args.seeds]) for t in TASKS])
     print(f"\n문장만 바꿨을 때 (seed 고정) 최종 위치 차이 평균: {by_sentence * 100:5.1f} cm")
-    print(f"noise 만 바꿨을 때 (문장 고정) 최종 위치 차이 평균: {by_noise * 100:5.1f} cm")
+    print(f"noise만 바꿨을 때 (문장 고정) 최종 위치 차이 평균: {by_noise * 100:5.1f} cm")
 
 
 if __name__ == "__main__":

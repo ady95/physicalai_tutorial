@@ -63,7 +63,8 @@ def main():
     # 2) PPO 학습
     train_env = Monitor(PointReachEnv(reward_mode=args.reward))
     model = PPO("MlpPolicy", train_env, seed=args.seed, verbose=0,
-                n_steps=1024, batch_size=256, learning_rate=3e-4, gamma=0.98)
+                n_steps=1024, batch_size=256, learning_rate=3e-4, gamma=0.98,
+                device="cpu")          # 작은 MLP 는 CPU 가 더 빠르다 (GPU 를 쓰면 SB3 가 경고한다)
     print(f"\n[PPO 학습] {args.steps:,} steps ...")
     t0 = time.time()
     model.learn(total_timesteps=args.steps)

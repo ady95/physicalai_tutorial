@@ -83,7 +83,7 @@ def main():
         img = (img.permute(1, 2, 0).numpy() * 255).astype(np.uint8)
         cv2.imwrite(f"{OUT}/frame0_{tag}_{k.split('.')[-1]}.png", cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
     print(f"\n저장: {OUT}/episode_{tag}_state_action.png, frame0_{tag}_*.png")
-    print(f"state 범위: min {states.min(0)}  max {states.max(0)}")
+    print(f"state 범위: min {np.round(states.min(0), 3)}  max {np.round(states.max(0), 3)}")
 
 
 if __name__ == "__main__":

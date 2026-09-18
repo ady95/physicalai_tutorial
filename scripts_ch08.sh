@@ -3,14 +3,26 @@
 #   8-1: 세 가지 색 블록 데이터셋 120 episode → SmolVLA 파인튜닝 → 색별 평가 → 언어 진단
 #   8-2: 고정 위치 20 episode → ACT 학습 → 고정/무작위 위치 평가, 6부 ACT 와 비교
 #   8-3: 조명·바닥·카메라 변형에서 ACT 평가
-set -u
+set -uo pipefail
 cd "$(dirname "$0")"
 if [ -f outputs/HOLD_CH08 ]; then echo "HOLD_CH08 exists, skipping"; exit 0; fi
 source .venv/bin/activate
 export MUJOCO_GL=egl SVT_LOG=0
 mkdir -p outputs/logs
-F='Warning|warn|torchcodec|libtorchcodec|libav|it/s\]|B/s\]|Map:|mp4 @|Exception ignored|Traceback|File "|EGLError|glCheckError|^\s*$'
-run() { name=$1; shift; echo "=== $name  $(date +%H:%M:%S) ==="; "$@" 2>&1 | grep -vE "$F" | tee "outputs/logs/$name.txt" | tail -${TAIL:-8}; }
+F='Warning|warn|torchcodec|libtorchcodec|libav|it/s\]|B/s\]|Map:|mp4 @|EGLError|glCheckError|^\s*$'
+run() {
+  name=$1; shift
+  echo "=== $name  $(date +%H:%M:%S) ==="
+  "$@" > "outputs/logs/$name.raw" 2>&1
+  rc=$?
+  grep -vE "$F" "outputs/logs/$name.raw" > "outputs/logs/$name.txt" || true
+  if [ $rc -ne 0 ]; then
+    echo "!!! $name 실패 (exit $rc). 원본 로그 outputs/logs/$name.raw 의 마지막 40줄:"
+    tail -40 "outputs/logs/$name.raw"
+    exit $rc
+  fi
+  tail -${TAIL:-8} "outputs/logs/$name.txt"
+}
 RENAME='{"observation.images.top": "observation.images.camera1", "observation.images.wrist": "observation.images.camera2"}'
 ACT=${ACT:-outputs/train/act_so101_v2/checkpoints/last/pretrained_model}
 VLA_STEPS=${VLA_STEPS:-10000}

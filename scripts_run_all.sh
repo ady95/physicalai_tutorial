@@ -1,12 +1,24 @@
 #!/usr/bin/env bash
 # 책의 모든 실습 스크립트를 순서대로 실행하고 로그를 outputs/logs/ 에 남긴다 (집필 검증용).
-set -u
+set -uo pipefail
 cd "$(dirname "$0")"
 source .venv/bin/activate
 export MUJOCO_GL=egl
 mkdir -p outputs/logs
-F='Exception ignored|Traceback|File "|EGLError|glCheckError|Warning|warn'
-run() { name=$1; shift; echo "=== $name ==="; "$@" 2>&1 | grep -vE "$F" | tee "outputs/logs/$name.txt" | tail -${TAIL:-6}; }
+F='EGLError|glCheckError|Warning|warn'
+run() {
+  name=$1; shift
+  echo "=== $name  $(date +%H:%M:%S) ==="
+  "$@" > "outputs/logs/$name.raw" 2>&1
+  rc=$?
+  grep -vE "$F" "outputs/logs/$name.raw" > "outputs/logs/$name.txt" || true
+  if [ $rc -ne 0 ]; then
+    echo "!!! $name 실패 (exit $rc). 원본 로그 outputs/logs/$name.raw 의 마지막 40줄:"
+    tail -40 "outputs/logs/$name.raw"
+    exit $rc
+  fi
+  tail -${TAIL:-8} "outputs/logs/$name.txt"
+}
 run ch01_agent_3lines      python ch01/agent_3lines.py
 run ch01_random_agent      python ch01/random_agent.py
 run ch02_check_env         python ch02/check_env.py
