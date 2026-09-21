@@ -1,16 +1,16 @@
-"""9-3 실습 — LLM이 지휘하는 Pick and Place
+"""10-3 실습 — LLM이 지휘하는 Pick and Place
 
 3-6의 Rule 기반 Pick and Place와 같은 과제, 같은 블록 위치, 같은 성공 판정입니다.
 다른 것은 단 하나, 다섯 단계의 순서를 사람이 적었느냐 LLM이 정하느냐입니다.
 
     3-6  사람이 적은 상태 기계  →  성공률 90% (10회)
-    9-3  LLM이 도구를 골라 진행  →  이 스크립트로 측정
+    10-3  LLM이 도구를 골라 진행  →  이 스크립트로 측정
 
 실행:
-    python ch09/run_llm_pick.py --no-video                    # 기본 위치 1회
-    MUJOCO_GL=egl python ch09/run_llm_pick.py                 # 영상까지 저장
-    python ch09/run_llm_pick.py --no-video --trials 10        # 3-6과 같은 무작위 위치 10회
-    MUJOCO_GL=egl python ch09/run_llm_pick.py --no-video --trials 10 --perception color
+    python ch10/run_llm_pick.py --no-video                    # 기본 위치 1회
+    MUJOCO_GL=egl python ch10/run_llm_pick.py                 # 영상까지 저장
+    python ch10/run_llm_pick.py --no-video --trials 10        # 3-6과 같은 무작위 위치 10회
+    MUJOCO_GL=egl python ch10/run_llm_pick.py --no-video --trials 10 --perception color
 """
 
 import argparse
@@ -22,9 +22,9 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ch03.pick_and_place import is_in_box  # noqa: E402
-from ch09.llm_agent import run_agent  # noqa: E402
-from ch09.llm_client import LLMClient, save_trace  # noqa: E402
-from ch09.robot_tools import SYSTEM_PROMPT, RobotTools  # noqa: E402
+from ch10.llm_agent import run_agent  # noqa: E402
+from ch10.llm_client import LLMClient, save_trace  # noqa: E402
+from ch10.robot_tools import SYSTEM_PROMPT, RobotTools  # noqa: E402
 from common.robot import SO101Sim  # noqa: E402
 from common.vision import SimCamera  # noqa: E402
 
@@ -58,8 +58,8 @@ def main():
     ap.add_argument("--model", default=None, help="비우면 환경변수 OPENAI_MODEL")
     ap.add_argument("--verbose", action="store_true", help="반복 모드에서도 도구 호출을 하나씩 출력")
     ap.add_argument("--no-video", action="store_true")
-    ap.add_argument("--out", default="outputs/ch09_llm_pick.mp4")
-    ap.add_argument("--trace", default="outputs/traces/ch09_llm_pick.json")
+    ap.add_argument("--out", default="outputs/ch10_llm_pick.mp4")
+    ap.add_argument("--trace", default="outputs/traces/ch10_llm_pick.json")
     args = ap.parse_args()
 
     client = LLMClient(model=args.model)
