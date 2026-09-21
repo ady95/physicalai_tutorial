@@ -21,7 +21,7 @@ dependencies = [
     "lerobot[dataset,training,smolvla]>=0.6",
 ]
 
-# 10부(선택 과정)에서만 필요합니다. 본편 1~8부는 이것 없이 전부 돌아갑니다.
+# 9부(선택 과정)에서만 필요합니다. 본편 1~8부는 이것 없이 전부 돌아갑니다.
 #   uv pip install -e ".[llm]"   또는   uv pip install openai
 [project.optional-dependencies]
 llm = ["openai>=3.0"]

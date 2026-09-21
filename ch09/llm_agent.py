@@ -1,4 +1,4 @@
-"""10부 — 관찰 → 판단 → 행동 루프를 LLM으로 닫기.
+"""9부 — 관찰 → 판단 → 행동 루프를 LLM으로 닫기.
 
 1-2에서 세 줄로 적었던 루프가 그대로입니다. policy 자리에 LLM이 들어갔을 뿐입니다.
 
@@ -11,7 +11,7 @@
 
 import json
 
-from ch10.llm_client import strip_images
+from ch09.llm_client import strip_images
 
 STOP_REASONS = {"done": "report_done 호출", "max_steps": "스텝 상한 도달", "no_call": "도구를 부르지 않음"}
 

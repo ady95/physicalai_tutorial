@@ -1,4 +1,4 @@
-"""10-5 프로젝트 — 8-1에서 SmolVLA가 못 한 과제를 LLM Planner로
+"""9-6 프로젝트 — 8-1에서 SmolVLA가 못 한 과제를 LLM Planner로
 
 8-1과 8-1-1에서 SmolVLA는 블록 세 개 중 문장이 가리키는 색을 고르지 못했습니다.
 179 Episode · 20,000스텝으로도 사실상 0%였습니다. 같은 장면, 같은 문장, 같은 판정으로
@@ -10,8 +10,8 @@
   - 성공/오답 판정   ch03.pick_and_place.is_in_box
 
 실행:
-    MUJOCO_GL=egl python ch10/eval_llm_multicolor.py --layouts 20 --perception state
-    MUJOCO_GL=egl python ch10/eval_llm_multicolor.py --layouts 20 --perception camera
+    MUJOCO_GL=egl python ch09/eval_llm_multicolor.py --layouts 20 --perception state
+    MUJOCO_GL=egl python ch09/eval_llm_multicolor.py --layouts 20 --perception camera
 """
 
 import argparse
@@ -24,9 +24,9 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ch03.pick_and_place import is_in_box  # noqa: E402
 from ch08.record_multicolor import COLORS, TASK_FMT, random_layout  # noqa: E402
-from ch10.llm_agent import run_agent  # noqa: E402
-from ch10.llm_client import LLMClient, save_trace  # noqa: E402
-from ch10.robot_tools import SYSTEM_PROMPT, RobotTools  # noqa: E402
+from ch09.llm_agent import run_agent  # noqa: E402
+from ch09.llm_client import LLMClient, save_trace  # noqa: E402
+from ch09.robot_tools import SYSTEM_PROMPT, RobotTools  # noqa: E402
 from common.robot import SO101Sim  # noqa: E402
 from common.vision import SimCamera  # noqa: E402
 
@@ -74,7 +74,7 @@ def main():
     ap.add_argument("--perception", default="state", choices=["state", "color", "camera"])
     ap.add_argument("--max-steps", type=int, default=30)
     ap.add_argument("--model", default=None)
-    ap.add_argument("--trace", default="outputs/traces/ch10_multicolor.json")
+    ap.add_argument("--trace", default="outputs/traces/ch09_multicolor.json")
     args = ap.parse_args()
 
     client = LLMClient(model=args.model)

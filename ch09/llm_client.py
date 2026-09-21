@@ -1,6 +1,6 @@
-"""10부 — LLM(Responses API)을 부르는 얇은 래퍼.
+"""9부 — LLM(Responses API)을 부르는 얇은 래퍼.
 
-이 책의 다른 부와 달리 10부는 외부 LLM API를 씁니다. 접속 정보는 코드에 적지 않고
+이 책의 다른 부와 달리 9부는 외부 LLM API를 씁니다. 접속 정보는 코드에 적지 않고
 OpenAI SDK가 표준으로 읽는 환경변수에서 가져옵니다.
 
     OPENAI_API_KEY    발급받은 API 키
@@ -9,7 +9,7 @@ OpenAI SDK가 표준으로 읽는 환경변수에서 가져옵니다.
 
 왜 Chat Completions가 아니라 Responses API인가:
 카메라 이미지를 base64(data: URL)로 넣어야 하는데, 이 방식은 Responses API의
-input_image에서만 확실히 동작합니다. 10-4에서 실제로 확인합니다.
+input_image에서만 확실히 동작합니다. 9-5에서 실제로 확인합니다.
 """
 
 import json
@@ -30,7 +30,7 @@ class LLMClient:
     def __init__(self, model=None, timeout=120.0):
         try:
             from openai import OpenAI
-        except ImportError as e:  # 10부는 선택 과정이라 openai 를 기본 설치에 넣지 않았습니다
+        except ImportError as e:  # 9부는 선택 과정이라 openai 를 기본 설치에 넣지 않았습니다
             raise LLMError("openai 패키지가 없습니다.  uv pip install openai") from e
         if not os.getenv("OPENAI_API_KEY"):
             raise LLMError("환경변수 OPENAI_API_KEY 가 없습니다. .env 를 확인하세요.")
