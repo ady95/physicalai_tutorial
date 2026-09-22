@@ -1,10 +1,10 @@
-"""9-4 실습 — LLM이 지휘하는 Pick and Place
+"""9-3 실습 — LLM이 지휘하는 Pick and Place
 
 3-6의 Rule 기반 Pick and Place와 같은 과제, 같은 블록 위치, 같은 성공 판정입니다.
 다른 것은 단 하나, 다섯 단계의 순서를 사람이 적었느냐 LLM이 정하느냐입니다.
 
     3-6  사람이 적은 상태 기계  →  성공률 90% (10회)
-    9-4  LLM이 도구를 골라 진행  →  이 스크립트로 측정
+    9-3  LLM이 도구를 골라 진행  →  이 스크립트로 측정
 
 실행:
     python ch09/run_llm_pick.py --no-video                    # 기본 위치 1회
