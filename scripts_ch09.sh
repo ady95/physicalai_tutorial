@@ -44,7 +44,8 @@ done
 # 9-5 — 8-1 과 같은 색 지정 과제 (camera 는 비용이 커서 배치를 절반으로)
 run ch09_multicolor_state  python ch09/eval_llm_multicolor.py --layouts $LAYOUTS --perception state \
     --trace outputs/traces/ch09_multicolor_state.json
-run ch09_multicolor_camera python ch09/eval_llm_multicolor.py --layouts $(( (LAYOUTS + 1) / 2 ))   # 최소 1 배치는 보장 --perception camera \
+# 배치 수는 절반으로 줄이되 최소 1 배치는 보장한다 (SMOKE=1 이면 0 이 되어 버린다)
+run ch09_multicolor_camera python ch09/eval_llm_multicolor.py --layouts $(( (LAYOUTS + 1) / 2 )) --perception camera \
     --trace outputs/traces/ch09_multicolor_camera.json
 
 echo "=== 완료  $(date +%H:%M:%S) ==="
