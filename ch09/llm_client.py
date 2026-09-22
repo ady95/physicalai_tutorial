@@ -16,7 +16,7 @@ import json
 import os
 import time
 
-DEFAULT_MODEL = "gpt-5.1"
+DEFAULT_MODEL = "gpt-6-astra"   # 9부의 수치를 측정한 모델
 MAX_RETRY = 3
 
 

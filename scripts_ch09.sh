@@ -15,7 +15,7 @@ source .venv/bin/activate
 export MUJOCO_GL=egl
 
 : "${OPENAI_API_KEY:?환경변수 OPENAI_API_KEY 를 설정하세요}"
-export OPENAI_MODEL=${OPENAI_MODEL:-gpt-5.1}
+export OPENAI_MODEL=${OPENAI_MODEL:-gpt-6-astra}   # 원고의 수치를 측정한 모델
 mkdir -p outputs/logs outputs/traces
 
 if [ -n "${SMOKE:-}" ]; then TRIALS=2; LAYOUTS=1; else TRIALS=10; LAYOUTS=20; fi
