@@ -154,8 +154,12 @@ class RobotTools:
         _, err = self.robot.move_to(target, seconds=seconds)
         self.robot.hold(SETTLE)
         pos, _ = self.robot.site_pose()
-        # solve_ik 의 err 는 위치 오차와 방향 오차를 함께 묶은 값이라 그대로 주면 오해를 부른다.
-        # LLM이 판단에 쓸 수 있도록 "얼마나 못 갔는가"와 "손가락이 기울었는가"를 나눠서 돌려준다 (9-3).
+        # solve_ik 의 err 는 위치 오차와 방향 오차를 함께 묶은 값이라 그대로 주면 오해를 부른다 (9-2).
+        # position_error 는 실제로 측정한 값이고,
+        # tilted 는 그 IK 잔차가 큰지로 판단하는 대리 지표다. 손끝 회전을 직접 잰 각도가 아니라
+        # 위치 오차가 커도 True 가 될 수 있다. 정확히 재려면 site_pose() 의 손가락 축과
+        # 수직 방향 사이의 각도를 쓰면 되지만, 그러면 LLM에게 보이는 값이 달라져
+        # 9-3 의 측정과 비교할 수 없게 되므로 원고의 실측과 같은 정의를 유지한다 (4차 검수 #29).
         out = {"gripper_xyz": _xyz(pos),
                "position_error": round(float(np.linalg.norm(np.asarray(pos) - target)), 4),
                "tilted": bool(err > 0.1),

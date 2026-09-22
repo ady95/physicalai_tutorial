@@ -5,7 +5,7 @@
 #
 # 본편과 달리 학습이 없습니다. GPU 도 LeRobot 도 쓰지 않습니다.
 # 대신 외부 LLM API 를 호출하므로 요금이 발생합니다. 아래 전체를 돌리면
-# 약 190 Episode, 200만 토큰 규모입니다. 먼저 SMOKE=1 로 규모를 줄여 확인하세요.
+# 120 Episode(9-3 에 30, 9-5 에 90), 200만 토큰 규모입니다. 먼저 SMOKE=1 로 규모를 줄여 확인하세요.
 #
 #   SMOKE=1 ./scripts_ch09.sh      # 각 조건 2~3 회만 (수천 원 수준)
 #   ./scripts_ch09.sh              # 원고에 실은 전체 측정
@@ -44,7 +44,7 @@ done
 # 9-5 — 8-1 과 같은 색 지정 과제 (camera 는 비용이 커서 배치를 절반으로)
 run ch09_multicolor_state  python ch09/eval_llm_multicolor.py --layouts $LAYOUTS --perception state \
     --trace outputs/traces/ch09_multicolor_state.json
-run ch09_multicolor_camera python ch09/eval_llm_multicolor.py --layouts $((LAYOUTS / 2)) --perception camera \
+run ch09_multicolor_camera python ch09/eval_llm_multicolor.py --layouts $(( (LAYOUTS + 1) / 2 ))   # 최소 1 배치는 보장 --perception camera \
     --trace outputs/traces/ch09_multicolor_camera.json
 
 echo "=== 완료  $(date +%H:%M:%S) ==="

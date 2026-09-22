@@ -54,7 +54,10 @@ def run_episode(client, layout, color, perception="state", max_steps=30, verbose
     else:
         rec["result"] = "실패"
 
-    # 8-1-1의 "언어 일치"와 같은 뜻: 문장이 가리킨 블록을 실제로 건드렸는가
+    # 문장이 가리킨 블록을 실제로 움직였는가 (1 cm 넘게 움직인 블록 중 가장 많이 움직인 것).
+    # 8-1-1 의 "언어 일치"와 같은 이름이지만 재는 방법이 다르다. 그쪽은 6초 동안 손끝이
+    # 가장 가까이 간 블록이라 건드리지 못해도 집계되고, 이쪽은 움직이지 않으면 미판정이다.
+    # 두 숫자를 같은 지표로 나란히 두면 안 된다 (4차 검수 #21).
     moved = {c: float(np.linalg.norm(robot.cube_pos(c) - start[c])) for c in COLORS}
     touched = max(moved, key=moved.get) if max(moved.values()) > MOVED else None
     rec["touched"] = touched
@@ -77,6 +80,8 @@ def main():
     ap.add_argument("--trace", default="outputs/traces/ch09_multicolor.json")
     args = ap.parse_args()
 
+    if args.layouts < 1:
+        ap.error("--layouts 는 1 이상이어야 합니다")
     client = LLMClient(model=args.model)
     print(f"모델 {client.model}  perception={args.perception}  배치 {args.layouts}개 × 색 3가지\n")
 
@@ -88,7 +93,9 @@ def main():
         layout = random_layout(rng)                      # 8-1과 같은 배치 생성기
         for color in COLORS:
             rec = run_episode(client, layout, color, args.perception, args.max_steps)
-            if len(records) >= 6:               # trace 파일이 커지지 않도록 앞 6개만 대화 전문을 남긴다
+            # trace 파일이 커지지 않게 대화 전문은 앞 6개만 남긴다.
+            # 다만 실패·오답은 원인을 봐야 하므로 전부 남긴다 (4차 검수 #24).
+            if len(records) >= 6 and rec["result"] == "성공":
                 rec.pop("transcript", None)
             rec["layout"], rec["color"] = i, color
             records.append(rec)

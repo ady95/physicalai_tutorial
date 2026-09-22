@@ -8,8 +8,9 @@ OpenAI SDK가 표준으로 읽는 환경변수에서 가져옵니다.
     OPENAI_MODEL      (선택) 모델 이름. 기본값은 아래 DEFAULT_MODEL
 
 왜 Chat Completions가 아니라 Responses API인가:
-카메라 이미지를 base64(data: URL)로 넣어야 하는데, 이 방식은 Responses API의
-input_image에서만 확실히 동작합니다. 9-4에서 실제로 확인합니다.
+gpt-6-astra 의 도구 호출이 Responses API 를 요구하고, 이미지 입력까지 한 방식으로
+통일하는 편이 코드가 단순하기 때문입니다. 공식 Chat Completions 도 base64 data URL
+이미지를 지원하므로, 그쪽이 안 된다는 뜻은 아닙니다 (9-2, 4차 검수 #27).
 """
 
 import json
