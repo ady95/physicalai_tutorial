@@ -60,11 +60,17 @@ class LLMClient:
         raise LLMError(f"LLM 호출이 {MAX_RETRY}회 실패했습니다: {last}")
 
 
-def strip_images(items):
-    """trace 를 저장하기 전에 base64 이미지를 자리표시자로 바꾼다 (파일이 수십 MB가 되는 것을 방지)."""
+def clean_transcript(items):
+    """trace 를 저장하기 전에 정리한다.
+
+    - base64 이미지를 자리표시자로 (파일이 수십 MB가 되는 것을 방지)
+    - 모델이 돌려주는 암호화 추론 블록(encrypted_content)을 제거.
+      우리가 읽을 수 없는 불투명 데이터인데 용량만 크고, 비밀 스캐너가 오탐한다.
+    """
     out = []
     for it in items:
         it = json.loads(json.dumps(it))
+        it.pop("encrypted_content", None)
         content = it.get("content")
         if isinstance(content, list):
             for c in content:

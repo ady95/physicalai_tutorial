@@ -60,6 +60,8 @@ MUJOCO_GL=egl python ch03/pick_and_place.py
 6~8부에서 필자가 학습한 ACT·SmolVLA 체크포인트는 [릴리스 페이지](https://github.com/ady95/physicalai_tutorial/releases/tag/v0.1-checkpoints)에 있습니다.
 GPU가 없거나 학습을 건너뛰고 싶을 때 내려받아 평가 스크립트(`ch06/eval_act.py`, `ch07/eval_smolvla.py`)에 바로 넣을 수 있습니다.
 
+9부의 LLM Planner 실행 기록(trace)은 [v0.2-ch09-traces](https://github.com/ady95/physicalai_tutorial/releases/tag/v0.2-ch09-traces) 에 있습니다. API 요금 없이 책의 수치가 어떻게 나왔는지 확인할 수 있습니다.
+
 ## 라이선스
 
 MIT

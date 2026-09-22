@@ -11,7 +11,7 @@
 
 import json
 
-from ch09.llm_client import strip_images
+from ch09.llm_client import clean_transcript
 
 STOP_REASONS = {"done": "report_done 호출", "max_steps": "스텝 상한 도달", "no_call": "도구를 부르지 않음"}
 
@@ -54,7 +54,7 @@ def run_agent(client, tools, task, system_prompt, max_steps=25, verbose=True):
             break
 
     return {"stop": stop, "claimed_success": claimed, "steps": step + 1,
-            "tool_calls": len(tools.calls), "transcript": strip_images(items)}
+            "tool_calls": len(tools.calls), "transcript": clean_transcript(items)}
 
 
 def _fmt(d):
