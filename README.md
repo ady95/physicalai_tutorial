@@ -4,6 +4,16 @@
 실물 로봇 없이 MuJoCo 시뮬레이션, OpenCV·YOLO, Hugging Face LeRobot(ACT, SmolVLA)만으로
 Physical AI의 전체 파이프라인을 완주합니다.
 
+<img src="assets/book-cover.png" alt="《로봇 없이 시작하는 Physical AI 따라하기》 표지" width="280">
+
+## 책 구매
+
+전자책(PDF)으로 판매 중입니다.
+
+- [YES24](https://www.yes24.com/product/goods/196826869)
+- [교보문고](https://ebook-product.kyobobook.co.kr/dig/epd/ebook/E000013603589)
+- [위키독스](https://wikidocs.net/book/21363) — 온라인 책 페이지
+
 ## 준비
 
 - Ubuntu 22.04 LTS 이상 (Windows는 WSL2, macOS는 CPU 경로)
